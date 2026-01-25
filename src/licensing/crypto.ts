@@ -36,15 +36,17 @@ export function sha256(message: string): string {
   const msgLen = msgBuffer.length;
   const bitLen = msgLen * 8;
 
-  // Pad to 512-bit blocks (64 bytes)
-  const padLen = ((msgLen + 8) % 64 === 0) ? 64 : 64 - ((msgLen + 8) % 64);
-  const paddedLen = msgLen + 1 + padLen + 8;
-  const padded = new Uint8Array(paddedLen);
+  // Calculate padded length: message + 1 byte (0x80) + padding + 8 bytes (length)
+  // Total must be multiple of 64 bytes (512 bits)
+  const totalLen = msgLen + 1 + 8; // message + 0x80 + 64-bit length
+  const paddedLen = Math.ceil(totalLen / 64) * 64;
 
+  // Create padded buffer
+  const padded = new Uint8Array(paddedLen);
   padded.set(msgBuffer);
   padded[msgLen] = 0x80;
 
-  // Append length in bits as 64-bit big-endian
+  // Append length in bits as 64-bit big-endian (we only use lower 32 bits for simplicity)
   const view = new DataView(padded.buffer);
   view.setUint32(paddedLen - 4, bitLen, false);
 
