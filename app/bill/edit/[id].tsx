@@ -41,6 +41,8 @@ import {
 import { BillLineItemForm, PaymentMode, GstRate, Invoice, InvoiceItem } from '../../../src/types';
 import { getBillById, db, invoices, invoiceItems } from '../../../src/db';
 import { eq } from 'drizzle-orm';
+import { useLicense } from '../../../src/hooks';
+import { UpgradePrompt } from '../../../src/components/licensing';
 
 const GST_RATES: GstRate[] = [5, 12, 18, 28];
 
@@ -48,11 +50,13 @@ export default function EditBillScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const license = useLicense();
 
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [originalBill, setOriginalBill] = useState<Invoice | null>(null);
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
 
   // Form state
   const [customerName, setCustomerName] = useState('');
@@ -159,6 +163,12 @@ export default function EditBillScreen() {
 
   const handleSaveBill = async () => {
     if (!id || !originalBill) return;
+
+    // Check license before saving
+    if (!license.canEditBill) {
+      setShowUpgradePrompt(true);
+      return;
+    }
 
     if (lineItems.length === 0) {
       Alert.alert('No Items', 'Please add at least one item to the bill.');
@@ -471,6 +481,12 @@ export default function EditBillScreen() {
           />
         </View>
       </ScrollView>
+
+      {/* Upgrade Prompt */}
+      <UpgradePrompt
+        visible={showUpgradePrompt}
+        onClose={() => setShowUpgradePrompt(false)}
+      />
     </KeyboardAvoidingView>
   );
 }

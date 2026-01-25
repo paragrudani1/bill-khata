@@ -12,6 +12,8 @@ import { Text, Heading2, MoneyLarge, Button, Card, Caption } from '../../src/com
 import { formatMoney, getTodayISO } from '../../src/utils';
 import { getDashboardStats } from '../../src/db';
 import { useSettingsStore } from '../../src/stores';
+import { useLicense } from '../../src/hooks';
+import { UpgradePrompt } from '../../src/components/licensing';
 
 interface DashboardStats {
   totalSalesPaise: number;
@@ -33,6 +35,8 @@ export default function HomeScreen() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+  const license = useLicense();
 
   const loadStats = useCallback(async () => {
     try {
@@ -60,7 +64,11 @@ export default function HomeScreen() {
   };
 
   const handleCreateBill = () => {
-    router.push('/bill/create');
+    if (license.canCreateBill) {
+      router.push('/bill/create');
+    } else {
+      setShowUpgradePrompt(true);
+    }
   };
 
   const handleViewTodayBills = () => {
@@ -152,7 +160,25 @@ export default function HomeScreen() {
         >
           ⓘ Data stored locally on this device only
         </Text>
+
+        {/* Trial/License Status */}
+        {license.isTrialActive && license.daysRemaining !== null && (
+          <Text
+            variant="caption"
+            color="secondary"
+            align="center"
+            style={styles.trialStatus}
+          >
+            Trial: {license.daysRemaining} day{license.daysRemaining === 1 ? '' : 's'} remaining
+          </Text>
+        )}
       </View>
+
+      {/* Upgrade Prompt */}
+      <UpgradePrompt
+        visible={showUpgradePrompt}
+        onClose={() => setShowUpgradePrompt(false)}
+      />
     </View>
   );
 }
@@ -214,5 +240,8 @@ const styles = StyleSheet.create({
   },
   disclaimer: {
     marginTop: spacing.sm,
+  },
+  trialStatus: {
+    marginTop: spacing.xs,
   },
 });

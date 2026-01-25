@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { View, StyleSheet, ScrollView, Pressable, Alert, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Pressable, Alert, Image, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
@@ -13,6 +13,8 @@ import { Text, Heading3, Card, Caption, Input, Button } from '../../src/componen
 import { useSettingsStore } from '../../src/stores';
 import { InvoiceTemplate, SupportedLanguage } from '../../src/types';
 import { InvoiceColorTheme } from '../../src/services';
+import { useLicense } from '../../src/hooks';
+import { UpgradePrompt, LicenseKeyInput } from '../../src/components/licensing';
 
 interface SettingItemProps {
   label: string;
@@ -180,6 +182,11 @@ function GstRatePicker({
 export default function SettingsScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const license = useLicense();
+
+  // License-related state
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+  const [showLicenseKeyInput, setShowLicenseKeyInput] = useState(false);
 
   // Settings from store
   const shopName = useSettingsStore((s) => s.shopName);
@@ -208,6 +215,11 @@ export default function SettingsScreen() {
   const [tempValue, setTempValue] = useState('');
 
   const handleEditField = (field: string, currentValue: string) => {
+    // Check license for protected fields
+    if (!license.canEditSettings) {
+      setShowUpgradePrompt(true);
+      return;
+    }
     setEditingField(field);
     setTempValue(currentValue);
   };
@@ -232,6 +244,12 @@ export default function SettingsScreen() {
   };
 
   const handlePickLogo = async () => {
+    // Check license
+    if (!license.canEditSettings) {
+      setShowUpgradePrompt(true);
+      return;
+    }
+
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
       Alert.alert('Permission Required', 'Please allow access to your photos to select a logo.');
@@ -444,6 +462,76 @@ export default function SettingsScreen() {
           </Card>
         </View>
 
+        {/* License */}
+        <View style={styles.section}>
+          <Heading3 style={styles.sectionTitle}>License</Heading3>
+          <Card variant="outlined" style={styles.licenseCard}>
+            <View style={styles.licenseStatus}>
+              <Text variant="label">Status</Text>
+              <View style={[
+                styles.statusBadge,
+                {
+                  backgroundColor: license.isLicensed
+                    ? colors.success + '20'
+                    : license.isTrialActive
+                    ? colors.primary + '20'
+                    : colors.error + '20',
+                }
+              ]}>
+                <Text
+                  variant="caption"
+                  style={{
+                    color: license.isLicensed
+                      ? colors.success
+                      : license.isTrialActive
+                      ? colors.primary
+                      : colors.error,
+                  }}
+                >
+                  {license.isLicensed
+                    ? 'Licensed'
+                    : license.isTrialActive
+                    ? `Trial (${license.daysRemaining} days left)`
+                    : 'Expired'}
+                </Text>
+              </View>
+            </View>
+
+            {license.deviceFingerprint && (
+              <View style={styles.deviceIdContainer}>
+                <Text variant="label">Device ID</Text>
+                <Text
+                  variant="caption"
+                  color="secondary"
+                  style={styles.deviceIdText}
+                  selectable
+                >
+                  {license.deviceFingerprint}
+                </Text>
+              </View>
+            )}
+
+            {!license.isLicensed && (
+              <View style={styles.licenseActions}>
+                <Button
+                  title="Enter License Key"
+                  variant="outline"
+                  size="small"
+                  onPress={() => setShowLicenseKeyInput(true)}
+                  style={styles.licenseButton}
+                />
+                <Button
+                  title="Get License"
+                  variant="primary"
+                  size="small"
+                  onPress={license.openWhatsAppSupport}
+                  style={styles.licenseButton}
+                />
+              </View>
+            )}
+          </Card>
+        </View>
+
         {/* About */}
         <View style={styles.section}>
           <Card variant="filled">
@@ -461,6 +549,18 @@ export default function SettingsScreen() {
 
       {/* Edit Modal */}
       {renderEditModal()}
+
+      {/* Upgrade Prompt */}
+      <UpgradePrompt
+        visible={showUpgradePrompt}
+        onClose={() => setShowUpgradePrompt(false)}
+      />
+
+      {/* License Key Input */}
+      <LicenseKeyInput
+        visible={showLicenseKeyInput}
+        onClose={() => setShowLicenseKeyInput(false)}
+      />
     </View>
   );
 }
@@ -617,5 +717,33 @@ const styles = StyleSheet.create({
   },
   editButton: {
     minWidth: 80,
+  },
+  licenseCard: {
+    gap: spacing.md,
+  },
+  licenseStatus: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  statusBadge: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.sm,
+  },
+  deviceIdContainer: {
+    gap: spacing.xs,
+  },
+  deviceIdText: {
+    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
+    letterSpacing: 1,
+  },
+  licenseActions: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.xs,
+  },
+  licenseButton: {
+    flex: 1,
   },
 });

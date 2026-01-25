@@ -10,7 +10,7 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider, useTheme } from '../src/theme';
 import { initializeDatabase } from '../src/db';
-import { useSettingsStore } from '../src/stores';
+import { useSettingsStore, useLicenseStore } from '../src/stores';
 import { Text } from '../src/components/ui';
 
 function RootLayoutContent() {
@@ -22,11 +22,13 @@ function RootLayoutContent() {
   const [error, setError] = useState<string | null>(null);
 
   const wizardCompleted = useSettingsStore((s) => s.wizardCompleted);
+  const initializeLicense = useLicenseStore((s) => s.initialize);
 
   useEffect(() => {
     async function initialize() {
       try {
         await initializeDatabase();
+        await initializeLicense();
         setIsReady(true);
       } catch (e) {
         console.error('Initialization error:', e);
