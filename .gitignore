@@ -40,4 +40,5 @@ yarn-error.*
 /ios
 /android
 PROGRESS.md
+CLAUDE.md
 docs/*
