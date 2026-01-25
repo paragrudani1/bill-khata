@@ -11,13 +11,18 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
+  Share,
+  Alert,
 } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
+import * as Haptics from 'expo-haptics';
 import { useTheme } from '../../theme';
 import { spacing, borderRadius } from '../../theme/spacing';
 import { Text } from '../ui/Text';
 import { Button } from '../ui/Button';
 import { useLicense } from '../../hooks/useLicense';
 import { LicenseKeyInput } from './LicenseKeyInput';
+import { SUPPORT_WHATSAPP_NUMBER } from '../../licensing';
 
 interface UpgradePromptProps {
   visible: boolean;
@@ -39,8 +44,71 @@ export function UpgradePrompt({
   const displayTitle = title || (license.isExpired ? 'Your trial has ended' : 'Upgrade Required');
   const displayMessage = message || 'Contact us to get a license key and unlock all features.';
 
+  // Generate the license request message
+  const getLicenseRequestMessage = () => {
+    return `Hi, I want to upgrade BillKhata.\n\nDevice ID: ${license.deviceFingerprint || 'Unknown'}`;
+  };
+
   const handleWhatsApp = async () => {
-    await license.openWhatsAppSupport();
+    try {
+      await license.openWhatsAppSupport();
+    } catch (error) {
+      // WhatsApp failed, fall back to share
+      handleShareFallback();
+    }
+  };
+
+  const handleShareFallback = async () => {
+    const requestMessage = getLicenseRequestMessage();
+
+    try {
+      // Copy to clipboard first
+      await Clipboard.setStringAsync(requestMessage);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+      // Then open share sheet
+      const result = await Share.share({
+        message: requestMessage,
+        title: 'BillKhata License Request',
+      });
+
+      if (result.action === Share.sharedAction) {
+        Alert.alert(
+          'Message Sent',
+          'Your license request has been shared. We will respond with your license key soon.',
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      // If share also fails, just confirm clipboard copy
+      Alert.alert(
+        'Message Copied',
+        `Your license request has been copied to clipboard.\n\nPlease send it to: +${SUPPORT_WHATSAPP_NUMBER}`,
+        [{ text: 'OK' }]
+      );
+    }
+  };
+
+  const handleCopyAndShare = async () => {
+    const requestMessage = getLicenseRequestMessage();
+
+    try {
+      // Copy to clipboard
+      await Clipboard.setStringAsync(requestMessage);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+      // Open share sheet
+      await Share.share({
+        message: requestMessage,
+        title: 'BillKhata License Request',
+      });
+    } catch (error) {
+      Alert.alert(
+        'Message Copied',
+        `Your license request has been copied to clipboard.\n\nPlease send it to: +${SUPPORT_WHATSAPP_NUMBER}`,
+        [{ text: 'OK' }]
+      );
+    }
   };
 
   const handleEnterKey = () => {
@@ -92,14 +160,21 @@ export function UpgradePrompt({
             </Text>
 
             {license.deviceFingerprint && (
-              <View style={[styles.deviceInfo, { backgroundColor: colors.surfaceSecondary }]}>
+              <Pressable
+                onPress={async () => {
+                  await Clipboard.setStringAsync(license.deviceFingerprint || '');
+                  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                  Alert.alert('Copied', 'Device ID copied to clipboard');
+                }}
+                style={[styles.deviceInfo, { backgroundColor: colors.surfaceSecondary }]}
+              >
                 <Text variant="caption" color="secondary">
-                  Device ID
+                  Device ID (tap to copy)
                 </Text>
                 <Text variant="bodySmall" style={styles.deviceId}>
                   {license.deviceFingerprint}
                 </Text>
-              </View>
+              </Pressable>
             )}
 
             <View style={styles.actions}>
@@ -109,6 +184,14 @@ export function UpgradePrompt({
                 onPress={handleWhatsApp}
                 style={styles.button}
                 icon={<Text style={{ color: '#fff', marginRight: 4 }}>💬</Text>}
+              />
+
+              <Button
+                title="Other Apps"
+                variant="secondary"
+                onPress={handleCopyAndShare}
+                style={styles.button}
+                icon={<Text style={{ marginRight: 4 }}>📤</Text>}
               />
 
               <Button
