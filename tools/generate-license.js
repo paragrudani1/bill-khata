@@ -44,10 +44,13 @@ function sha256(message) {
 
   const msgLen = msgBuffer.length;
   const bitLen = msgLen * 8;
-  const padLen = ((msgLen + 8) % 64 === 0) ? 64 : 64 - ((msgLen + 8) % 64);
-  const paddedLen = msgLen + 1 + padLen + 8;
-  const padded = new Uint8Array(paddedLen);
 
+  // Calculate padded length: message + 1 byte (0x80) + padding + 8 bytes (length)
+  // Total must be multiple of 64 bytes (512 bits)
+  const totalLen = msgLen + 1 + 8;
+  const paddedLen = Math.ceil(totalLen / 64) * 64;
+
+  const padded = new Uint8Array(paddedLen);
   padded.set(msgBuffer);
   padded[msgLen] = 0x80;
 

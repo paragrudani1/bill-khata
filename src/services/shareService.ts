@@ -4,7 +4,6 @@
  */
 
 import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system';
 import { Linking, Platform, Alert } from 'react-native';
 import { generateInvoicePdf, InvoiceTemplate, InvoiceColorTheme } from './pdfGenerator';
 import { getBillById } from '../db';

@@ -110,7 +110,7 @@ export function hmacSha256(key: string, message: string): string {
   const blockSize = 64;
 
   // Convert key to bytes
-  let keyBytes = new TextEncoder().encode(key);
+  let keyBytes: Uint8Array<ArrayBufferLike> = new TextEncoder().encode(key);
 
   // If key is longer than block size, hash it
   if (keyBytes.length > blockSize) {

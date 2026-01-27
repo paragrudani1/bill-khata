@@ -3,7 +3,7 @@
  * Template-based PDF generation for invoices
  */
 
-import * as FileSystem from 'expo-file-system/legacy';
+import { File, Directory, Paths } from 'expo-file-system';
 import * as Print from 'expo-print';
 import { Invoice, InvoiceItem } from '../types';
 import { formatMoney, formatDate, formatBillNumber, formatIndianNumber } from '../utils';
@@ -38,17 +38,17 @@ async function getBase64Logo(uri: string | null): Promise<string | null> {
   if (!uri) return null;
 
   try {
+    // Create a File instance from the URI
+    const file = new File(uri);
+
     // Check if the file exists
-    const fileInfo = await FileSystem.getInfoAsync(uri);
-    if (!fileInfo.exists) {
+    if (!file.exists) {
       console.warn('Logo file does not exist:', uri);
       return null;
     }
 
     // Read as base64
-    const base64 = await FileSystem.readAsStringAsync(uri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
+    const base64 = await file.base64();
 
     // Determine MIME type from extension
     const extension = uri.split('.').pop()?.toLowerCase();
@@ -125,12 +125,12 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
       font-size: ${isCompact ? '11px' : '12px'};
       line-height: 1.4;
       color: #333;
-      padding: ${isCompact ? '15px' : isModern ? '30px' : '20px'};
+      padding: 12px;
       background: #fff;
     }
 
     .invoice {
-      max-width: 100%;
+      max-width: 380px;
       margin: 0 auto;
     }
 
@@ -143,14 +143,14 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .shop-logo {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       object-fit: contain;
       margin-bottom: 10px;
     }
 
     .shop-name {
-      font-size: ${isCompact ? '18px' : '24px'};
+      font-size: 18px;
       font-weight: bold;
       color: ${primaryColor};
       margin-bottom: 5px;
@@ -163,8 +163,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
 
     /* Invoice Info */
     .invoice-info {
-      display: flex;
-      justify-content: space-between;
+      display: block;
       margin-bottom: ${isCompact ? '15px' : '20px'};
       padding: ${isCompact ? '10px' : '15px'};
       background: ${isModern ? '#f8f9fa' : 'transparent'};
@@ -178,7 +177,8 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .invoice-meta {
-      text-align: right;
+      text-align: left;
+      margin-top: 10px;
     }
 
     .invoice-meta div {
@@ -213,7 +213,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     .items-table th {
       background: ${primaryColor};
       color: white;
-      padding: ${isCompact ? '6px 8px' : '10px 12px'};
+      padding: 6px 4px;
       text-align: left;
       font-size: ${isCompact ? '10px' : '11px'};
       text-transform: uppercase;
@@ -232,7 +232,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .items-table td {
-      padding: ${isCompact ? '6px 8px' : '10px 12px'};
+      padding: 6px 4px;
       border-bottom: 1px solid #eee;
     }
 
@@ -241,13 +241,13 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .item-name {
-      max-width: 200px;
+      word-break: break-word;
     }
 
     /* Summary */
     .summary {
-      margin-left: auto;
-      width: ${isCompact ? '200px' : '250px'};
+      width: 100%;
+      max-width: 100%;
     }
 
     .summary-row {
@@ -434,15 +434,15 @@ function escapeHtml(text: string): string {
 /**
  * Get the cache directory for PDFs
  */
-function getPdfCacheDir(): string {
-  return `${FileSystem.cacheDirectory}invoices/`;
+function getPdfCacheDir(): Directory {
+  return new Directory(Paths.cache, 'invoices');
 }
 
 /**
  * Get cached PDF path for a bill
  */
-function getCachedPdfPath(billId: string): string {
-  return `${getPdfCacheDir()}invoice_${billId}.pdf`;
+function getCachedPdfFile(billId: string): File {
+  return new File(getPdfCacheDir(), `invoice_${billId}.pdf`);
 }
 
 /**
@@ -450,17 +450,17 @@ function getCachedPdfPath(billId: string): string {
  */
 async function getCachedPdf(billId: string): Promise<string | null> {
   try {
-    const pdfPath = getCachedPdfPath(billId);
-    const fileInfo = await FileSystem.getInfoAsync(pdfPath);
+    const pdfFile = getCachedPdfFile(billId);
 
-    if (fileInfo.exists) {
+    if (pdfFile.exists) {
       // Check if file is less than 7 days old
       const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-      if (fileInfo.modificationTime && fileInfo.modificationTime * 1000 > sevenDaysAgo) {
-        return pdfPath;
+      const modTime = pdfFile.modificationTime;
+      if (modTime && modTime > sevenDaysAgo) {
+        return pdfFile.uri;
       }
       // Delete old cache
-      await FileSystem.deleteAsync(pdfPath, { idempotent: true });
+      await pdfFile.delete();
     }
   } catch (error) {
     console.error('Error checking cached PDF:', error);
@@ -487,28 +487,26 @@ export async function generateInvoicePdf(options: PdfGeneratorOptions): Promise<
   // Generate HTML
   const html = generateInvoiceHtml(options, logoBase64);
 
-  // Create PDF
+  // Create PDF with mobile-friendly width
   const { uri } = await Print.printToFileAsync({
     html,
     base64: false,
+    width: 380,
   });
 
   // Ensure cache directory exists
   const cacheDir = getPdfCacheDir();
-  const dirInfo = await FileSystem.getInfoAsync(cacheDir);
-  if (!dirInfo.exists) {
-    await FileSystem.makeDirectoryAsync(cacheDir, { intermediates: true });
+  if (!cacheDir.exists) {
+    await cacheDir.create();
   }
 
   // Move to cache with proper name
-  const cachedPath = getCachedPdfPath(bill.id);
-  await FileSystem.moveAsync({
-    from: uri,
-    to: cachedPath,
-  });
+  const tempFile = new File(uri);
+  const cachedFile = getCachedPdfFile(bill.id);
+  await tempFile.move(cachedFile);
 
-  console.log('Generated PDF:', cachedPath);
-  return cachedPath;
+  console.log('Generated PDF:', cachedFile.uri);
+  return cachedFile.uri;
 }
 
 /**
@@ -519,20 +517,17 @@ export async function cleanupPdfCache(): Promise<number> {
 
   try {
     const cacheDir = getPdfCacheDir();
-    const dirInfo = await FileSystem.getInfoAsync(cacheDir);
 
-    if (!dirInfo.exists) return 0;
+    if (!cacheDir.exists) return 0;
 
-    const files = await FileSystem.readDirectoryAsync(cacheDir);
+    const files = await cacheDir.list();
     const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
-    for (const file of files) {
-      const filePath = `${cacheDir}${file}`;
-      const fileInfo = await FileSystem.getInfoAsync(filePath);
-
-      if (fileInfo.exists && fileInfo.modificationTime) {
-        if (fileInfo.modificationTime * 1000 < sevenDaysAgo) {
-          await FileSystem.deleteAsync(filePath, { idempotent: true });
+    for (const item of files) {
+      if (item instanceof File) {
+        const modTime = item.modificationTime;
+        if (modTime && modTime < sevenDaysAgo) {
+          await item.delete();
           deletedCount++;
         }
       }
@@ -549,8 +544,10 @@ export async function cleanupPdfCache(): Promise<number> {
  */
 export async function deleteCachedPdf(billId: string): Promise<void> {
   try {
-    const pdfPath = getCachedPdfPath(billId);
-    await FileSystem.deleteAsync(pdfPath, { idempotent: true });
+    const pdfFile = getCachedPdfFile(billId);
+    if (pdfFile.exists) {
+      await pdfFile.delete();
+    }
   } catch (error) {
     console.error('Error deleting cached PDF:', error);
   }
