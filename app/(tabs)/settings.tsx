@@ -8,6 +8,7 @@ import { View, StyleSheet, ScrollView, Pressable, Alert, Image, Platform } from 
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 import { useTheme, spacing, borderRadius } from '../../src/theme';
 import { Text, Heading3, Card, Caption, Input, Button } from '../../src/components/ui';
 import { useSettingsStore } from '../../src/stores';
@@ -15,6 +16,7 @@ import { InvoiceTemplate, SupportedLanguage } from '../../src/types';
 import { InvoiceColorTheme } from '../../src/services';
 import { useLicense } from '../../src/hooks';
 import { UpgradePrompt, LicenseKeyInput } from '../../src/components/licensing';
+import { LANGUAGE_NAMES, changeLanguage } from '../../src/i18n';
 
 interface SettingItemProps {
   label: string;
@@ -58,10 +60,11 @@ function TemplatePicker({
   onSelect: (template: InvoiceTemplate) => void;
 }) {
   const { colors } = useTheme();
+  const { t } = useTranslation('settings');
   const templates: { id: InvoiceTemplate; name: string; description: string }[] = [
-    { id: 'classic', name: 'Classic', description: 'Traditional professional look' },
-    { id: 'modern', name: 'Modern', description: 'Clean with rounded corners' },
-    { id: 'compact', name: 'Compact', description: 'Smaller fonts, more items' },
+    { id: 'classic', name: t('templates.classic'), description: t('templates.classicDesc') },
+    { id: 'modern', name: t('templates.modern'), description: t('templates.modernDesc') },
+    { id: 'compact', name: t('templates.compact'), description: t('templates.compactDesc') },
   ];
 
   return (
@@ -107,11 +110,12 @@ function ColorThemePicker({
   onSelect: (theme: InvoiceColorTheme) => void;
 }) {
   const { colors } = useTheme();
+  const { t } = useTranslation('settings');
   const themes: { id: InvoiceColorTheme; name: string; color: string }[] = [
-    { id: 'blue', name: 'Blue', color: '#2563EB' },
-    { id: 'green', name: 'Green', color: '#16A34A' },
-    { id: 'orange', name: 'Orange', color: '#EA580C' },
-    { id: 'purple', name: 'Purple', color: '#9333EA' },
+    { id: 'blue', name: t('colors.blue'), color: '#2563EB' },
+    { id: 'green', name: t('colors.green'), color: '#16A34A' },
+    { id: 'orange', name: t('colors.orange'), color: '#EA580C' },
+    { id: 'purple', name: t('colors.purple'), color: '#9333EA' },
   ];
 
   return (
@@ -179,10 +183,55 @@ function GstRatePicker({
   );
 }
 
+// Language Picker
+function LanguagePicker({
+  selected,
+  onSelect,
+}: {
+  selected: SupportedLanguage;
+  onSelect: (language: SupportedLanguage) => void;
+}) {
+  const { colors } = useTheme();
+  const languages: { id: SupportedLanguage; name: string }[] = [
+    { id: 'en', name: LANGUAGE_NAMES['en'] },
+    { id: 'gu', name: LANGUAGE_NAMES['gu'] },
+    { id: 'hi', name: LANGUAGE_NAMES['hi'] },
+  ];
+
+  return (
+    <View style={styles.languagePickerContainer}>
+      {languages.map((lang) => (
+        <Pressable
+          key={lang.id}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            onSelect(lang.id);
+          }}
+          style={[
+            styles.languageOption,
+            {
+              backgroundColor: selected === lang.id ? colors.primary : colors.surface,
+              borderColor: selected === lang.id ? colors.primary : colors.border,
+            },
+          ]}
+        >
+          <Text
+            variant="label"
+            style={{ color: selected === lang.id ? colors.textInverse : colors.text }}
+          >
+            {lang.name}
+          </Text>
+        </Pressable>
+      ))}
+    </View>
+  );
+}
+
 export default function SettingsScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   const license = useLicense();
+  const { t } = useTranslation(['settings', 'common']);
 
   // License-related state
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
@@ -198,6 +247,7 @@ export default function SettingsScreen() {
   const footerNote = useSettingsStore((s) => s.footerNote);
   const defaultGstEnabled = useSettingsStore((s) => s.defaultGstEnabled);
   const defaultGstRate = useSettingsStore((s) => s.defaultGstRate);
+  const language = useSettingsStore((s) => s.language);
 
   // Setters
   const setShopName = useSettingsStore((s) => s.setShopName);
@@ -209,6 +259,13 @@ export default function SettingsScreen() {
   const setFooterNote = useSettingsStore((s) => s.setFooterNote);
   const setDefaultGstEnabled = useSettingsStore((s) => s.setDefaultGstEnabled);
   const setDefaultGstRate = useSettingsStore((s) => s.setDefaultGstRate);
+  const setLanguage = useSettingsStore((s) => s.setLanguage);
+
+  // Handle language change
+  const handleLanguageChange = (newLanguage: SupportedLanguage) => {
+    setLanguage(newLanguage);
+    changeLanguage(newLanguage);
+  };
 
   // Editing state
   const [editingField, setEditingField] = useState<string | null>(null);
@@ -252,7 +309,7 @@ export default function SettingsScreen() {
 
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      Alert.alert('Permission Required', 'Please allow access to your photos to select a logo.');
+      Alert.alert(t('common:messages.permissionRequired'), t('common:messages.allowPhotosAccess'));
       return;
     }
 
@@ -270,10 +327,10 @@ export default function SettingsScreen() {
   };
 
   const handleRemoveLogo = () => {
-    Alert.alert('Remove Logo', 'Are you sure you want to remove the shop logo?', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('removeLogo.title'), t('removeLogo.confirm'), [
+      { text: t('common:buttons.cancel'), style: 'cancel' },
       {
-        text: 'Remove',
+        text: t('common:buttons.remove'),
         style: 'destructive',
         onPress: () => {
           setShopLogo(null);
@@ -288,10 +345,10 @@ export default function SettingsScreen() {
     if (!editingField) return null;
 
     const fieldLabels: Record<string, string> = {
-      shopName: 'Shop Name',
-      shopPhone: 'Phone Number',
-      shopAddress: 'Address',
-      footerNote: 'Footer Note',
+      shopName: t('fields.shopName'),
+      shopPhone: t('fields.phoneNumber'),
+      shopAddress: t('fields.address'),
+      footerNote: t('fields.footerNote'),
     };
 
     return (
@@ -301,20 +358,20 @@ export default function SettingsScreen() {
           <Input
             value={tempValue}
             onChangeText={setTempValue}
-            placeholder={`Enter ${fieldLabels[editingField].toLowerCase()}`}
+            placeholder={fieldLabels[editingField]}
             autoFocus
             multiline={editingField === 'shopAddress' || editingField === 'footerNote'}
             containerStyle={styles.editInput}
           />
           <View style={styles.editButtons}>
             <Button
-              title="Cancel"
+              title={t('common:buttons.cancel')}
               variant="ghost"
               onPress={() => setEditingField(null)}
               style={styles.editButton}
             />
             <Button
-              title="Save"
+              title={t('common:buttons.save')}
               variant="primary"
               onPress={() => handleSaveField(editingField)}
               style={styles.editButton}
@@ -334,28 +391,28 @@ export default function SettingsScreen() {
       >
         {/* Shop Details */}
         <View style={styles.section}>
-          <Heading3 style={styles.sectionTitle}>Shop Details</Heading3>
+          <Heading3 style={styles.sectionTitle}>{t('sections.shopDetails')}</Heading3>
           <Card variant="outlined" padding={0}>
             <SettingItem
-              label="Shop Name"
-              value={shopName || 'Not set'}
+              label={t('fields.shopName')}
+              value={shopName || t('common:labels.notSet')}
               onPress={() => handleEditField('shopName', shopName)}
             />
             <SettingItem
-              label="Phone Number"
-              value={shopPhone || 'Not set'}
+              label={t('fields.phoneNumber')}
+              value={shopPhone || t('common:labels.notSet')}
               onPress={() => handleEditField('shopPhone', shopPhone)}
             />
             <SettingItem
-              label="Address"
-              value={shopAddress || 'Not set'}
+              label={t('fields.address')}
+              value={shopAddress || t('common:labels.notSet')}
               onPress={() => handleEditField('shopAddress', shopAddress)}
             />
           </Card>
 
           {/* Logo */}
           <Card variant="outlined" style={styles.logoCard}>
-            <Text variant="label" style={styles.logoLabel}>Shop Logo</Text>
+            <Text variant="label" style={styles.logoLabel}>{t('fields.shopLogo')}</Text>
             <View style={styles.logoContainer}>
               {shopLogoUri ? (
                 <Pressable onPress={handlePickLogo}>
@@ -367,12 +424,12 @@ export default function SettingsScreen() {
                   style={[styles.logoPlaceholder, { borderColor: colors.border }]}
                 >
                   <Text style={styles.logoPlaceholderText}>📷</Text>
-                  <Caption>Add Logo</Caption>
+                  <Caption>{t('fields.addLogo')}</Caption>
                 </Pressable>
               )}
               {shopLogoUri && (
                 <Button
-                  title="Remove"
+                  title={t('common:buttons.remove')}
                   variant="ghost"
                   size="small"
                   onPress={handleRemoveLogo}
@@ -382,12 +439,24 @@ export default function SettingsScreen() {
           </Card>
         </View>
 
+        {/* App Preferences - Language */}
+        <View style={styles.section}>
+          <Heading3 style={styles.sectionTitle}>{t('sections.appPreferences')}</Heading3>
+          <Card variant="outlined" style={styles.customizeCard}>
+            <Text variant="label" style={styles.customizeLabel}>{t('sections.language')}</Text>
+            <LanguagePicker
+              selected={language}
+              onSelect={handleLanguageChange}
+            />
+          </Card>
+        </View>
+
         {/* Invoice Customization */}
         <View style={styles.section}>
-          <Heading3 style={styles.sectionTitle}>Invoice Customization</Heading3>
+          <Heading3 style={styles.sectionTitle}>{t('sections.invoice')}</Heading3>
 
           <Card variant="outlined" style={styles.customizeCard}>
-            <Text variant="label" style={styles.customizeLabel}>Template</Text>
+            <Text variant="label" style={styles.customizeLabel}>{t('fields.template')}</Text>
             <TemplatePicker
               selected={invoiceTemplate}
               onSelect={setInvoiceTemplate}
@@ -395,7 +464,7 @@ export default function SettingsScreen() {
           </Card>
 
           <Card variant="outlined" style={styles.customizeCard}>
-            <Text variant="label" style={styles.customizeLabel}>Color Theme</Text>
+            <Text variant="label" style={styles.customizeLabel}>{t('fields.colorTheme')}</Text>
             <ColorThemePicker
               selected={invoiceColorTheme}
               onSelect={setInvoiceColorTheme}
@@ -404,8 +473,8 @@ export default function SettingsScreen() {
 
           <Card variant="outlined" padding={0}>
             <SettingItem
-              label="Footer Note"
-              value={footerNote ? 'Set' : 'Not set'}
+              label={t('fields.footerNote')}
+              value={footerNote ? t('common:labels.set') : t('common:labels.notSet')}
               onPress={() => handleEditField('footerNote', footerNote)}
             />
           </Card>
@@ -413,10 +482,10 @@ export default function SettingsScreen() {
 
         {/* GST Settings */}
         <View style={styles.section}>
-          <Heading3 style={styles.sectionTitle}>GST Settings</Heading3>
+          <Heading3 style={styles.sectionTitle}>{t('sections.gst')}</Heading3>
           <Card variant="outlined" style={styles.customizeCard}>
             <View style={styles.gstToggleRow}>
-              <Text variant="label">Default GST</Text>
+              <Text variant="label">{t('fields.defaultGst')}</Text>
               <Pressable
                 onPress={() => {
                   setDefaultGstEnabled(!defaultGstEnabled);
@@ -434,14 +503,14 @@ export default function SettingsScreen() {
                   variant="caption"
                   style={{ color: defaultGstEnabled ? colors.textInverse : colors.text }}
                 >
-                  {defaultGstEnabled ? 'ON' : 'OFF'}
+                  {defaultGstEnabled ? t('common:labels.on') : t('common:labels.off')}
                 </Text>
               </Pressable>
             </View>
 
             {defaultGstEnabled && (
               <>
-                <Text variant="label" style={styles.customizeLabel}>Default Rate</Text>
+                <Text variant="label" style={styles.customizeLabel}>{t('fields.defaultRate')}</Text>
                 <GstRatePicker
                   selected={defaultGstRate}
                   onSelect={setDefaultGstRate}
@@ -451,11 +520,11 @@ export default function SettingsScreen() {
           </Card>
         </View>
 
-        {/* About */}
+        {/* Trash */}
         <View style={styles.section}>
           <Card variant="outlined" padding={0}>
             <SettingItem
-              label="Trash"
+              label={t('trash')}
               value={undefined}
               onPress={() => router.push('/trash')}
             />
@@ -464,10 +533,10 @@ export default function SettingsScreen() {
 
         {/* License */}
         <View style={styles.section}>
-          <Heading3 style={styles.sectionTitle}>License</Heading3>
+          <Heading3 style={styles.sectionTitle}>{t('sections.license')}</Heading3>
           <Card variant="outlined" style={styles.licenseCard}>
             <View style={styles.licenseStatus}>
-              <Text variant="label">Status</Text>
+              <Text variant="label">{t('license.status')}</Text>
               <View style={[
                 styles.statusBadge,
                 {
@@ -489,17 +558,17 @@ export default function SettingsScreen() {
                   }}
                 >
                   {license.isLicensed
-                    ? 'Licensed'
+                    ? t('license.licensed')
                     : license.isTrialActive
-                    ? `Trial (${license.daysRemaining} days left)`
-                    : 'Expired'}
+                    ? t('license.trial', { days: license.daysRemaining })
+                    : t('license.expired')}
                 </Text>
               </View>
             </View>
 
             {license.deviceFingerprint && (
               <View style={styles.deviceIdContainer}>
-                <Text variant="label">Device ID</Text>
+                <Text variant="label">{t('fields.deviceId')}</Text>
                 <Text
                   variant="caption"
                   color="secondary"
@@ -514,14 +583,14 @@ export default function SettingsScreen() {
             {!license.isLicensed && (
               <View style={styles.licenseActions}>
                 <Button
-                  title="Enter License Key"
+                  title={t('fields.enterLicenseKey')}
                   variant="outline"
                   size="small"
                   onPress={() => setShowLicenseKeyInput(true)}
                   style={styles.licenseButton}
                 />
                 <Button
-                  title="Get License"
+                  title={t('fields.getLicense')}
                   variant="primary"
                   size="small"
                   onPress={license.openWhatsAppSupport}
@@ -536,10 +605,10 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <Card variant="filled">
             <Text variant="caption" color="secondary" align="center">
-              BillKhata v1.0.0
+              {t('about.version')}
             </Text>
             <Caption style={styles.aboutText}>
-              Made with ❤️ for Indian shopkeepers
+              {t('about.madeWith')}
             </Caption>
           </Card>
         </View>
@@ -660,6 +729,17 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   gstOption: {
+    flex: 1,
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  languagePickerContainer: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  languageOption: {
     flex: 1,
     padding: spacing.md,
     borderRadius: borderRadius.md,

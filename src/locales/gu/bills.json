@@ -1,0 +1,51 @@
+{
+  "create": {
+    "title": "બિલ બનાવો",
+    "saveBill": "બિલ સાચવો",
+    "saveChanges": "ફેરફારો સાચવો",
+    "addItem": "વસ્તુ ઉમેરો",
+    "itemName": "વસ્તુનું નામ",
+    "quantity": "જથ્થો",
+    "price": "કિંમત",
+    "noItems": "કોઈ વસ્તુઓ નથી",
+    "addItemPrompt": "કૃપા કરીને બિલમાં ઓછામાં ઓછી એક વસ્તુ ઉમેરો."
+  },
+  "detail": {
+    "title": "બિલની વિગતો",
+    "billNotFound": "બિલ મળ્યું નથી",
+    "lastModified": "છેલ્લે ફેરફાર",
+    "whatsapp": "વૉટ્સએપ",
+    "duplicate": "નકલ કરો",
+    "deleteBill": "બિલ કાઢી નાખો",
+    "deleteConfirm": "શું તમે ખરેખર આ બિલ કાઢી નાખવા માંગો છો? તે 30 દિવસ માટે ટ્રેશમાં ખસેડવામાં આવશે.",
+    "itemCount": "વસ્તુઓ ({{count}})"
+  },
+  "edit": {
+    "title": "બિલ સંપાદિત કરો"
+  },
+  "list": {
+    "title": "બિલો",
+    "today": "આજે",
+    "yesterday": "ગઈકાલે",
+    "noBills": "હજી કોઈ બિલ નથી",
+    "createFirst": "અહીં જોવા માટે તમારું પહેલું બિલ બનાવો",
+    "searchPlaceholder": "બિલો શોધો..."
+  },
+  "home": {
+    "todaysSales": "આજનું વેચાણ",
+    "billsCreatedToday": "આજે બનાવેલા બિલો",
+    "createBill": "+ બિલ બનાવો",
+    "trialRemaining": "ટ્રાયલ: {{days}} દિવસ બાકી",
+    "trialRemaining_plural": "ટ્રાયલ: {{days}} દિવસો બાકી"
+  },
+  "trash": {
+    "title": "ટ્રેશ",
+    "empty": "ટ્રેશ ખાલી છે",
+    "emptyHint": "કાઢી નાખેલા બિલો 30 દિવસ માટે અહીં દેખાય છે",
+    "billsInTrash": "ટ્રેશમાં {{count}} બિલ",
+    "billsInTrash_plural": "ટ્રેશમાં {{count}} બિલો",
+    "emptyTrash": "ટ્રેશ ખાલી કરો",
+    "emptyTrashConfirm": "આ ટ્રેશમાંના બધા બિલોને કાયમી ધોરણે કાઢી નાખશે. આ પૂર્વવત્ કરી શકાતું નથી.",
+    "daysLeft": "{{count}} દિવસ બાકી"
+  }
+}

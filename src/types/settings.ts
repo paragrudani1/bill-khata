@@ -20,7 +20,7 @@ export interface ShopSettings {
 }
 
 export type InvoiceTemplate = 'classic' | 'modern' | 'compact';
-export type SupportedLanguage = 'en' | 'hi';
+export type SupportedLanguage = 'en' | 'gu' | 'hi';
 
 export const defaultSettings: ShopSettings = {
   shopName: '',

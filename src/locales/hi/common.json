@@ -1,0 +1,61 @@
+{
+  "buttons": {
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "share": "शेयर करें",
+    "edit": "संपादित करें",
+    "add": "जोड़ें",
+    "continue": "जारी रखें",
+    "back": "वापस",
+    "skip": "छोड़ें",
+    "restore": "पुनर्स्थापित करें",
+    "remove": "हटाएं",
+    "getStarted": "शुरू करें",
+    "skipSetup": "सेटअप छोड़ें →",
+    "skipForNow": "अभी के लिए छोड़ें",
+    "startBilling": "बिलिंग शुरू करें"
+  },
+  "labels": {
+    "total": "कुल",
+    "subtotal": "उप-कुल",
+    "discount": "छूट",
+    "gst": "GST",
+    "cgst": "CGST",
+    "sgst": "SGST",
+    "cash": "नकद",
+    "upi": "UPI",
+    "on": "चालू",
+    "off": "बंद",
+    "auto": "ऑटो",
+    "date": "तारीख",
+    "billNumber": "बिल #",
+    "customer": "ग्राहक",
+    "walkIn": "वॉक-इन",
+    "items": "आइटम",
+    "paymentMode": "भुगतान का तरीका",
+    "status": "स्थिति",
+    "licensed": "लाइसेंस्ड",
+    "expired": "समाप्त",
+    "trial": "ट्रायल",
+    "daysLeft": "{{count}} दिन बाकी",
+    "daysRemaining": "{{count}} दिन बाकी",
+    "daysRemaining_plural": "{{count}} दिन बाकी",
+    "loading": "लोड हो रहा है...",
+    "free": "मुफ्त",
+    "set": "सेट",
+    "notSet": "सेट नहीं"
+  },
+  "errors": {
+    "required": "यह फील्ड आवश्यक है",
+    "failed": "ऑपरेशन विफल",
+    "loadFailed": "डेटा लोड करने में विफल",
+    "saveFailed": "सहेजने में विफल। कृपया पुनः प्रयास करें।",
+    "deleteFailed": "हटाने में विफल"
+  },
+  "messages": {
+    "dataStoredLocally": "डेटा केवल इस डिवाइस पर संग्रहीत",
+    "permissionRequired": "अनुमति आवश्यक",
+    "allowPhotosAccess": "लोगो चुनने के लिए कृपया अपनी फोटो की पहुंच की अनुमति दें।"
+  }
+}

@@ -7,6 +7,7 @@ import { useState, useCallback } from 'react';
 import { View, StyleSheet, FlatList, Pressable, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { useTheme, spacing } from '../../src/theme';
 import { Text, Card, Caption } from '../../src/components/ui';
 import { formatMoney, formatTime, formatBillNumber, getDateGroupKey } from '../../src/utils';
@@ -39,6 +40,7 @@ function groupBillsByDate(bills: Invoice[]): GroupedBills[] {
 export default function BillsScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation(['bills', 'common']);
 
   // Settings for sharing
   const shopName = useSettingsStore((s) => s.shopName);
@@ -103,7 +105,7 @@ export default function BillsScreen() {
           <View style={styles.billInfo}>
             <Text variant="label">{formatBillNumber(bill.billNumber)}</Text>
             <Text variant="body" numberOfLines={1}>
-              {bill.customerName || 'Walk-in'}
+              {bill.customerName || t('common:labels.walkIn')}
             </Text>
           </View>
           <Text variant="money" style={{ color: colors.text }}>
@@ -120,7 +122,7 @@ export default function BillsScreen() {
             style={styles.shareButton}
           >
             <Text variant="caption" style={{ color: colors.primary }}>
-              Share
+              {t('common:buttons.share')}
             </Text>
           </Pressable>
         </View>
@@ -167,10 +169,10 @@ export default function BillsScreen() {
               📋
             </Text>
             <Text variant="body" color="secondary" align="center">
-              No bills yet
+              {t('list.noBills')}
             </Text>
             <Caption style={styles.emptyHint}>
-              Create your first bill to see it here
+              {t('list.createFirst')}
             </Caption>
           </View>
         }

@@ -12,17 +12,28 @@ import { ThemeProvider, useTheme } from '../src/theme';
 import { initializeDatabase } from '../src/db';
 import { useSettingsStore, useLicenseStore } from '../src/stores';
 import { Text } from '../src/components/ui';
+import i18n from '../src/i18n';
+import { useTranslation } from 'react-i18next';
 
 function RootLayoutContent() {
   const { colors, isDark } = useTheme();
   const router = useRouter();
   const segments = useSegments();
+  const { t } = useTranslation(['bills', 'settings']);
 
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const wizardCompleted = useSettingsStore((s) => s.wizardCompleted);
+  const language = useSettingsStore((s) => s.language);
   const initializeLicense = useLicenseStore((s) => s.initialize);
+
+  // Sync language from settings store to i18n
+  useEffect(() => {
+    if (language && i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language]);
 
   useEffect(() => {
     async function initialize() {
@@ -102,27 +113,27 @@ function RootLayoutContent() {
         <Stack.Screen
           name="bill/create"
           options={{
-            title: 'Create Bill',
+            title: t('bills:create.title'),
             presentation: 'modal',
           }}
         />
         <Stack.Screen
           name="bill/[id]"
           options={{
-            title: 'Bill Details',
+            title: t('bills:detail.title'),
           }}
         />
         <Stack.Screen
           name="bill/edit/[id]"
           options={{
-            title: 'Edit Bill',
+            title: t('bills:edit.title'),
             presentation: 'modal',
           }}
         />
         <Stack.Screen
           name="trash/index"
           options={{
-            title: 'Trash',
+            title: t('bills:trash.title'),
           }}
         />
       </Stack>

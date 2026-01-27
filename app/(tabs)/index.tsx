@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, Pressable, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { useTheme, spacing } from '../../src/theme';
 import { Text, Heading2, MoneyLarge, Button, Card, Caption } from '../../src/components/ui';
 import { formatMoney, getTodayISO } from '../../src/utils';
@@ -26,6 +27,7 @@ export default function HomeScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   const shopName = useSettingsStore((s) => s.shopName);
+  const { t } = useTranslation(['bills', 'common']);
 
   const [stats, setStats] = useState<DashboardStats>({
     totalSalesPaise: 0,
@@ -102,7 +104,7 @@ export default function HomeScreen() {
           <Card variant="elevated" style={styles.salesCard}>
             <View style={styles.salesHeader}>
               <Text variant="label" color="secondary">
-                Today's Sales
+                {t('home.todaysSales')}
               </Text>
               <Text color="secondary">→</Text>
             </View>
@@ -115,13 +117,13 @@ export default function HomeScreen() {
         {/* Payment Mode Breakdown */}
         <View style={styles.breakdownRow}>
           <Card variant="outlined" style={styles.breakdownCard}>
-            <Caption>Cash</Caption>
+            <Caption>{t('common:labels.cash')}</Caption>
             <Text variant="money" style={{ color: colors.text }}>
               {formatMoney(stats.cashSalesPaise)}
             </Text>
           </Card>
           <Card variant="outlined" style={styles.breakdownCard}>
-            <Caption>UPI</Caption>
+            <Caption>{t('common:labels.upi')}</Caption>
             <Text variant="money" style={{ color: colors.text }}>
               {formatMoney(stats.upiSalesPaise)}
             </Text>
@@ -132,7 +134,7 @@ export default function HomeScreen() {
         <Card variant="filled" style={styles.countCard}>
           <View style={styles.countContent}>
             <Text variant="label" color="secondary">
-              Bills Created Today
+              {t('home.billsCreatedToday')}
             </Text>
             <Heading2>{stats.billCount}</Heading2>
           </View>
@@ -145,7 +147,7 @@ export default function HomeScreen() {
       {/* Fixed Bottom CTA */}
       <View style={[styles.ctaContainer, { backgroundColor: colors.background }]}>
         <Button
-          title="+ CREATE BILL"
+          title={t('home.createBill')}
           size="large"
           fullWidth
           onPress={handleCreateBill}
@@ -158,7 +160,7 @@ export default function HomeScreen() {
           align="center"
           style={styles.disclaimer}
         >
-          ⓘ Data stored locally on this device only
+          ⓘ {t('common:messages.dataStoredLocally')}
         </Text>
 
         {/* Trial/License Status */}
@@ -169,7 +171,7 @@ export default function HomeScreen() {
             align="center"
             style={styles.trialStatus}
           >
-            Trial: {license.daysRemaining} day{license.daysRemaining === 1 ? '' : 's'} remaining
+            {t('home.trialRemaining', { days: license.daysRemaining, count: license.daysRemaining })}
           </Text>
         )}
       </View>

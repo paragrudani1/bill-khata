@@ -1,0 +1,61 @@
+{
+  "buttons": {
+    "save": "સાચવો",
+    "cancel": "રદ કરો",
+    "delete": "કાઢી નાખો",
+    "share": "શેર કરો",
+    "edit": "સંપાદિત કરો",
+    "add": "ઉમેરો",
+    "continue": "આગળ વધો",
+    "back": "પાછળ",
+    "skip": "છોડો",
+    "restore": "પુનઃસ્થાપિત કરો",
+    "remove": "દૂર કરો",
+    "getStarted": "શરૂ કરો",
+    "skipSetup": "સેટઅપ છોડો →",
+    "skipForNow": "હમણાં છોડો",
+    "startBilling": "બિલિંગ શરૂ કરો"
+  },
+  "labels": {
+    "total": "કુલ",
+    "subtotal": "પેટા કુલ",
+    "discount": "છૂટ",
+    "gst": "GST",
+    "cgst": "CGST",
+    "sgst": "SGST",
+    "cash": "રોકડ",
+    "upi": "UPI",
+    "on": "ચાલુ",
+    "off": "બંધ",
+    "auto": "ઓટો",
+    "date": "તારીખ",
+    "billNumber": "બિલ #",
+    "customer": "ગ્રાહક",
+    "walkIn": "વૉક-ઇન",
+    "items": "વસ્તુઓ",
+    "paymentMode": "ચુકવણી પદ્ધતિ",
+    "status": "સ્થિતિ",
+    "licensed": "લાયસન્સ્ડ",
+    "expired": "સમાપ્ત",
+    "trial": "ટ્રાયલ",
+    "daysLeft": "{{count}} દિવસ બાકી",
+    "daysRemaining": "{{count}} દિવસ બાકી",
+    "daysRemaining_plural": "{{count}} દિવસો બાકી",
+    "loading": "લોડ થઈ રહ્યું છે...",
+    "free": "મફત",
+    "set": "સેટ",
+    "notSet": "સેટ નથી"
+  },
+  "errors": {
+    "required": "આ ફીલ્ડ જરૂરી છે",
+    "failed": "ઓપરેશન નિષ્ફળ",
+    "loadFailed": "ડેટા લોડ કરવામાં નિષ્ફળ",
+    "saveFailed": "સાચવવામાં નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.",
+    "deleteFailed": "કાઢી નાખવામાં નિષ્ફળ"
+  },
+  "messages": {
+    "dataStoredLocally": "ડેટા ફક્ત આ ઉપકરણ પર સંગ્રહિત",
+    "permissionRequired": "પરવાનગી જરૂરી",
+    "allowPhotosAccess": "લોગો પસંદ કરવા માટે કૃપા કરીને તમારા ફોટાની ઍક્સેસ આપો."
+  }
+}

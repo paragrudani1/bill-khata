@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 import { useTheme, spacing } from '../../src/theme';
 import {
   Text,
@@ -25,6 +26,7 @@ export default function BillDetailScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { t } = useTranslation(['bills', 'common']);
 
   // Settings for PDF generation
   const shopName = useSettingsStore((s) => s.shopName);
@@ -114,12 +116,12 @@ export default function BillDetailScreen() {
 
   const handleDelete = () => {
     Alert.alert(
-      'Delete Bill',
-      'Are you sure you want to delete this bill? It will be moved to trash for 30 days.',
+      t('detail.deleteBill'),
+      t('detail.deleteConfirm'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common:buttons.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common:buttons.delete'),
           style: 'destructive',
           onPress: async () => {
             try {
@@ -146,7 +148,7 @@ export default function BillDetailScreen() {
   if (!bill) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
-        <Text color="secondary">Bill not found</Text>
+        <Text color="secondary">{t('detail.billNotFound')}</Text>
       </View>
     );
   }
@@ -182,20 +184,20 @@ export default function BillDetailScreen() {
 
         <View style={styles.customerRow}>
           <Text variant="label" color="secondary">
-            Customer
+            {t('common:labels.customer')}
           </Text>
-          <Text variant="body">{bill.customerName || 'Walk-in'}</Text>
+          <Text variant="body">{bill.customerName || t('common:labels.walkIn')}</Text>
         </View>
 
         <Caption>
-          Last modified: {formatDate(bill.updatedAt, 'short')} {formatTime(bill.updatedAt)}
+          {t('detail.lastModified')}: {formatDate(bill.updatedAt, 'short')} {formatTime(bill.updatedAt)}
         </Caption>
       </Card>
 
       {/* Items */}
       <View style={styles.section}>
         <Text variant="label" color="secondary" style={styles.sectionTitle}>
-          Items ({items.length})
+          {t('detail.itemCount', { count: items.length })}
         </Text>
         <Card variant="outlined">
           {items.map((item, index) => (
@@ -212,11 +214,11 @@ export default function BillDetailScreen() {
               <View style={styles.itemInfo}>
                 <Text variant="body">{item.itemName}</Text>
                 <Caption>
-                  {item.quantity} × {item.pricePaise === 0 ? 'FREE' : formatMoney(item.pricePaise)}
+                  {item.quantity} × {item.pricePaise === 0 ? t('common:labels.free') : formatMoney(item.pricePaise)}
                 </Caption>
               </View>
               <Text variant="money">
-                {item.pricePaise === 0 ? 'FREE' : formatMoney(item.totalPaise)}
+                {item.pricePaise === 0 ? t('common:labels.free') : formatMoney(item.totalPaise)}
               </Text>
             </View>
           ))}
@@ -227,13 +229,13 @@ export default function BillDetailScreen() {
       <View style={styles.section}>
         <Card variant="elevated">
           <View style={styles.summaryRow}>
-            <Text color="secondary">Subtotal</Text>
+            <Text color="secondary">{t('common:labels.subtotal')}</Text>
             <Text variant="money">{formatMoney(bill.subtotalPaise)}</Text>
           </View>
 
           {bill.discountPaise > 0 && (
             <View style={styles.summaryRow}>
-              <Text color="secondary">Discount</Text>
+              <Text color="secondary">{t('common:labels.discount')}</Text>
               <Text variant="money" style={{ color: colors.success }}>
                 -{formatMoney(bill.discountPaise)}
               </Text>
@@ -254,7 +256,7 @@ export default function BillDetailScreen() {
           )}
 
           <View style={[styles.summaryRow, styles.totalRow]}>
-            <Text variant="h3">TOTAL</Text>
+            <Text variant="h3">{t('common:labels.total')}</Text>
             <Text variant="moneyLarge" style={{ color: colors.primary }}>
               {formatMoney(bill.totalPaise)}
             </Text>
@@ -266,9 +268,9 @@ export default function BillDetailScreen() {
       <View style={styles.section}>
         <Card variant="filled">
           <View style={styles.paymentRow}>
-            <Text color="secondary">Payment Mode</Text>
+            <Text color="secondary">{t('common:labels.paymentMode')}</Text>
             <Text variant="label">
-              {bill.paymentMode === 'cash' ? '💵 Cash' : '📱 UPI'}
+              {bill.paymentMode === 'cash' ? `💵 ${t('common:labels.cash')}` : `📱 ${t('common:labels.upi')}`}
             </Text>
           </View>
         </Card>
@@ -278,7 +280,7 @@ export default function BillDetailScreen() {
       <View style={styles.actions}>
         <View style={styles.actionRow}>
           <Button
-            title="📱 WhatsApp"
+            title={`📱 ${t('detail.whatsapp')}`}
             variant="primary"
             onPress={handleWhatsAppShare}
             style={styles.actionButton}
@@ -286,7 +288,7 @@ export default function BillDetailScreen() {
             disabled={isSharing}
           />
           <Button
-            title="📤 Share"
+            title={`📤 ${t('common:buttons.share')}`}
             variant="secondary"
             onPress={handleShare}
             style={styles.actionButton}
@@ -295,20 +297,20 @@ export default function BillDetailScreen() {
         </View>
         <View style={styles.actionRow}>
           <Button
-            title="✏️ Edit"
+            title={`✏️ ${t('common:buttons.edit')}`}
             variant="outline"
             onPress={handleEdit}
             style={styles.actionButton}
           />
           <Button
-            title="📋 Duplicate"
+            title={`📋 ${t('detail.duplicate')}`}
             variant="outline"
             onPress={handleDuplicate}
             style={styles.actionButton}
           />
         </View>
         <Button
-          title="🗑️ Delete"
+          title={`🗑️ ${t('common:buttons.delete')}`}
           variant="ghost"
           onPress={handleDelete}
           style={styles.deleteButton}

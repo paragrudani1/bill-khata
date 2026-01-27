@@ -8,6 +8,7 @@ import { View, StyleSheet, FlatList, Pressable, RefreshControl, Alert } from 're
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 import { useTheme, spacing } from '../../src/theme';
 import { Text, Card, Caption, Button } from '../../src/components/ui';
 import { formatMoney, formatDate, formatBillNumber } from '../../src/utils';
@@ -17,6 +18,7 @@ import { Invoice } from '../../src/types';
 export default function TrashScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation(['bills', 'common']);
 
   const [bills, setBills] = useState<Invoice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,12 +60,12 @@ export default function TrashScreen() {
 
   const handleEmptyTrash = () => {
     Alert.alert(
-      'Empty Trash',
-      'This will permanently delete all bills in trash. This cannot be undone.',
+      t('trash.emptyTrash'),
+      t('trash.emptyTrashConfirm'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common:buttons.cancel'), style: 'cancel' },
         {
-          text: 'Empty Trash',
+          text: t('trash.emptyTrash'),
           style: 'destructive',
           onPress: async () => {
             try {
@@ -105,13 +107,13 @@ export default function TrashScreen() {
               {formatMoney(item.totalPaise)}
             </Text>
             <Caption style={{ color: colors.warning }}>
-              {daysRemaining} days left
+              {t('trash.daysLeft', { count: daysRemaining })}
             </Caption>
           </View>
         </View>
         <View style={styles.billActions}>
           <Button
-            title="Restore"
+            title={t('common:buttons.restore')}
             variant="primary"
             size="small"
             onPress={() => handleRestore(item.id)}
@@ -126,11 +128,11 @@ export default function TrashScreen() {
       {bills.length > 0 && (
         <View style={styles.headerActions}>
           <Caption>
-            {bills.length} bill{bills.length !== 1 ? 's' : ''} in trash
+            {t('trash.billsInTrash', { count: bills.length })}
           </Caption>
           <Pressable onPress={handleEmptyTrash}>
             <Text variant="caption" style={{ color: colors.error }}>
-              Empty Trash
+              {t('trash.emptyTrash')}
             </Text>
           </Pressable>
         </View>
@@ -154,10 +156,10 @@ export default function TrashScreen() {
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyIcon}>🗑️</Text>
             <Text variant="body" color="secondary" align="center">
-              Trash is empty
+              {t('trash.empty')}
             </Text>
             <Caption style={styles.emptyHint}>
-              Deleted bills appear here for 30 days
+              {t('trash.emptyHint')}
             </Caption>
           </View>
         }

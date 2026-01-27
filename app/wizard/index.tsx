@@ -8,6 +8,7 @@ import { View, StyleSheet, Pressable, Image, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 import { useTheme, spacing, borderRadius } from '../../src/theme';
 import { Text, Heading1, Heading2, Button, Input, Card, Caption } from '../../src/components/ui';
 import { useSettingsStore } from '../../src/stores';
@@ -21,6 +22,7 @@ const STEPS: WizardStep[] = ['welcome', 'shop-info', 'logo', 'branding', 'gst', 
 export default function SetupWizard() {
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation(['settings', 'common']);
 
   // Current step
   const [currentStep, setCurrentStep] = useState<WizardStep>('welcome');
@@ -124,32 +126,32 @@ export default function SetupWizard() {
         <Text style={styles.welcomeEmoji}>📋</Text>
       </View>
       <Heading1 align="center" style={styles.welcomeTitle}>
-        Welcome to BillKhata
+        {t('wizard.welcome.title')}
       </Heading1>
       <Text variant="body" color="secondary" align="center" style={styles.welcomeSubtitle}>
-        Create professional bills in seconds.{'\n'}Share instantly via WhatsApp.
+        {t('wizard.welcome.subtitle')}
       </Text>
 
       <View style={styles.featureList}>
         <View style={styles.featureItem}>
           <Text style={styles.featureIcon}>⚡</Text>
-          <Text variant="body">Super-fast billing</Text>
+          <Text variant="body">{t('wizard.welcome.feature1')}</Text>
         </View>
         <View style={styles.featureItem}>
           <Text style={styles.featureIcon}>📱</Text>
-          <Text variant="body">WhatsApp sharing</Text>
+          <Text variant="body">{t('wizard.welcome.feature2')}</Text>
         </View>
         <View style={styles.featureItem}>
           <Text style={styles.featureIcon}>🔒</Text>
-          <Text variant="body">Works offline</Text>
+          <Text variant="body">{t('wizard.welcome.feature3')}</Text>
         </View>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Get Started" size="large" fullWidth onPress={goNext} />
+        <Button title={t('common:buttons.getStarted')} size="large" fullWidth onPress={goNext} />
         <Pressable onPress={skipWizard} style={styles.skipButton}>
           <Text variant="body" color="secondary">
-            Skip setup →
+            {t('common:buttons.skipSetup')}
           </Text>
         </Pressable>
       </View>
@@ -159,29 +161,29 @@ export default function SetupWizard() {
   // Shop Info Screen
   const renderShopInfo = () => (
     <ScrollView style={styles.scrollStep} contentContainerStyle={styles.stepContent}>
-      <Heading2 align="center">Your Shop Details</Heading2>
+      <Heading2 align="center">{t('wizard.shopInfo.title')}</Heading2>
       <Text variant="body" color="secondary" align="center" style={styles.stepSubtitle}>
-        This will appear on your invoices
+        {t('wizard.shopInfo.subtitle')}
       </Text>
 
       <View style={styles.formContainer}>
         <Input
-          label="Shop Name"
-          placeholder="e.g., Sharma General Store"
+          label={t('fields.shopName')}
+          placeholder={t('wizard.shopInfo.shopNamePlaceholder')}
           value={shopName}
           onChangeText={setShopName}
           autoCapitalize="words"
         />
         <Input
-          label="Phone Number (Optional)"
-          placeholder="e.g., 98765 43210"
+          label={t('wizard.shopInfo.phoneLabel')}
+          placeholder={t('wizard.shopInfo.phonePlaceholder')}
           value={shopPhone}
           onChangeText={setShopPhone}
           keyboardType="phone-pad"
         />
         <Input
-          label="Address (Optional)"
-          placeholder="e.g., 123 Main Road, City"
+          label={t('wizard.shopInfo.addressLabel')}
+          placeholder={t('wizard.shopInfo.addressPlaceholder')}
           value={shopAddress}
           onChangeText={setShopAddress}
           multiline
@@ -189,10 +191,10 @@ export default function SetupWizard() {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Continue" size="large" fullWidth onPress={goNext} />
+        <Button title={t('common:buttons.continue')} size="large" fullWidth onPress={goNext} />
         <Pressable onPress={goNext} style={styles.skipButton}>
           <Text variant="body" color="secondary">
-            Skip for now
+            {t('common:buttons.skipForNow')}
           </Text>
         </Pressable>
       </View>
@@ -202,9 +204,9 @@ export default function SetupWizard() {
   // Logo Screen
   const renderLogo = () => (
     <View style={styles.stepContent}>
-      <Heading2 align="center">Add Your Logo</Heading2>
+      <Heading2 align="center">{t('wizard.logo.title')}</Heading2>
       <Text variant="body" color="secondary" align="center" style={styles.stepSubtitle}>
-        Make your invoices look professional
+        {t('wizard.logo.subtitle')}
       </Text>
 
       <Pressable onPress={handlePickLogo} style={styles.logoPickerContainer}>
@@ -214,7 +216,7 @@ export default function SetupWizard() {
           <View style={[styles.logoPlaceholder, { borderColor: colors.border }]}>
             <Text style={styles.logoPlaceholderIcon}>📷</Text>
             <Text variant="body" color="secondary">
-              Tap to select
+              {t('wizard.logo.tapToSelect')}
             </Text>
           </View>
         )}
@@ -222,7 +224,7 @@ export default function SetupWizard() {
 
       {logoUri && (
         <Button
-          title="Change Logo"
+          title={t('wizard.logo.changeLogo')}
           variant="ghost"
           onPress={handlePickLogo}
           style={styles.changeLogoButton}
@@ -230,10 +232,10 @@ export default function SetupWizard() {
       )}
 
       <View style={styles.buttonContainer}>
-        <Button title="Continue" size="large" fullWidth onPress={goNext} />
+        <Button title={t('common:buttons.continue')} size="large" fullWidth onPress={goNext} />
         <Pressable onPress={goNext} style={styles.skipButton}>
           <Text variant="body" color="secondary">
-            Skip for now
+            {t('common:buttons.skipForNow')}
           </Text>
         </Pressable>
       </View>
@@ -243,14 +245,14 @@ export default function SetupWizard() {
   // Branding Screen
   const renderBranding = () => (
     <ScrollView style={styles.scrollStep} contentContainerStyle={styles.stepContent}>
-      <Heading2 align="center">Customize Your Invoice</Heading2>
+      <Heading2 align="center">{t('wizard.branding.title')}</Heading2>
       <Text variant="body" color="secondary" align="center" style={styles.stepSubtitle}>
-        Choose your preferred style
+        {t('wizard.branding.subtitle')}
       </Text>
 
       <View style={styles.formContainer}>
         <Text variant="label" style={styles.optionLabel}>
-          Template
+          {t('wizard.branding.template')}
         </Text>
         <View style={styles.templateOptions}>
           {(['classic', 'modern', 'compact'] as InvoiceTemplate[]).map((t) => (
@@ -279,7 +281,7 @@ export default function SetupWizard() {
         </View>
 
         <Text variant="label" style={styles.optionLabel}>
-          Color
+          {t('wizard.branding.color')}
         </Text>
         <View style={styles.colorOptions}>
           {([
@@ -309,7 +311,7 @@ export default function SetupWizard() {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Continue" size="large" fullWidth onPress={goNext} />
+        <Button title={t('common:buttons.continue')} size="large" fullWidth onPress={goNext} />
       </View>
     </ScrollView>
   );
@@ -317,16 +319,16 @@ export default function SetupWizard() {
   // GST Screen
   const renderGst = () => (
     <View style={styles.stepContent}>
-      <Heading2 align="center">GST Preferences</Heading2>
+      <Heading2 align="center">{t('wizard.gst.title')}</Heading2>
       <Text variant="body" color="secondary" align="center" style={styles.stepSubtitle}>
-        Set your default GST settings
+        {t('wizard.gst.subtitle')}
       </Text>
 
       <Card variant="outlined" style={styles.gstCard}>
         <View style={styles.gstToggleRow}>
           <View>
-            <Text variant="label">Enable GST by default</Text>
-            <Caption>GST will be ON for new bills</Caption>
+            <Text variant="label">{t('wizard.gst.enableDefault')}</Text>
+            <Caption>{t('wizard.gst.enableDefaultHint')}</Caption>
           </View>
           <Pressable
             onPress={() => {
@@ -385,10 +387,10 @@ export default function SetupWizard() {
       </Card>
 
       <View style={styles.buttonContainer}>
-        <Button title="Continue" size="large" fullWidth onPress={goNext} />
+        <Button title={t('common:buttons.continue')} size="large" fullWidth onPress={goNext} />
         <Pressable onPress={goNext} style={styles.skipButton}>
           <Text variant="body" color="secondary">
-            Skip for now
+            {t('common:buttons.skipForNow')}
           </Text>
         </Pressable>
       </View>
@@ -402,14 +404,14 @@ export default function SetupWizard() {
         <Text style={styles.doneEmoji}>🎉</Text>
       </View>
       <Heading1 align="center" style={styles.doneTitle}>
-        You're All Set!
+        {t('wizard.done.title')}
       </Heading1>
       <Text variant="body" color="secondary" align="center" style={styles.doneSubtitle}>
-        Start creating bills in seconds.{'\n'}You can change settings anytime.
+        {t('wizard.done.subtitle')}
       </Text>
 
       <View style={styles.buttonContainer}>
-        <Button title="Start Billing" size="large" fullWidth onPress={finishWizard} />
+        <Button title={t('common:buttons.startBilling')} size="large" fullWidth onPress={finishWizard} />
       </View>
     </View>
   );
@@ -441,7 +443,7 @@ export default function SetupWizard() {
       {stepIndex > 0 && currentStep !== 'done' && (
         <Pressable onPress={goBack} style={styles.backButton}>
           <Text variant="body" color="secondary">
-            ← Back
+            ← {t('common:buttons.back')}
           </Text>
         </Pressable>
       )}

@@ -1,0 +1,51 @@
+{
+  "create": {
+    "title": "बिल बनाएं",
+    "saveBill": "बिल सहेजें",
+    "saveChanges": "बदलाव सहेजें",
+    "addItem": "आइटम जोड़ें",
+    "itemName": "आइटम का नाम",
+    "quantity": "मात्रा",
+    "price": "कीमत",
+    "noItems": "कोई आइटम नहीं",
+    "addItemPrompt": "कृपया बिल में कम से कम एक आइटम जोड़ें।"
+  },
+  "detail": {
+    "title": "बिल विवरण",
+    "billNotFound": "बिल नहीं मिला",
+    "lastModified": "अंतिम संशोधन",
+    "whatsapp": "वॉट्सएप",
+    "duplicate": "डुप्लिकेट",
+    "deleteBill": "बिल हटाएं",
+    "deleteConfirm": "क्या आप वाकई इस बिल को हटाना चाहते हैं? यह 30 दिनों के लिए ट्रैश में जाएगा।",
+    "itemCount": "आइटम ({{count}})"
+  },
+  "edit": {
+    "title": "बिल संपादित करें"
+  },
+  "list": {
+    "title": "बिल",
+    "today": "आज",
+    "yesterday": "कल",
+    "noBills": "अभी कोई बिल नहीं",
+    "createFirst": "यहां देखने के लिए अपना पहला बिल बनाएं",
+    "searchPlaceholder": "बिल खोजें..."
+  },
+  "home": {
+    "todaysSales": "आज की बिक्री",
+    "billsCreatedToday": "आज बनाए गए बिल",
+    "createBill": "+ बिल बनाएं",
+    "trialRemaining": "ट्रायल: {{days}} दिन बाकी",
+    "trialRemaining_plural": "ट्रायल: {{days}} दिन बाकी"
+  },
+  "trash": {
+    "title": "ट्रैश",
+    "empty": "ट्रैश खाली है",
+    "emptyHint": "हटाए गए बिल 30 दिनों के लिए यहां दिखाई देते हैं",
+    "billsInTrash": "ट्रैश में {{count}} बिल",
+    "billsInTrash_plural": "ट्रैश में {{count}} बिल",
+    "emptyTrash": "ट्रैश खाली करें",
+    "emptyTrashConfirm": "यह ट्रैश में सभी बिलों को स्थायी रूप से हटा देगा। यह पूर्ववत नहीं किया जा सकता।",
+    "daysLeft": "{{count}} दिन बाकी"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "title": "सेटिंग्स",
+  "sections": {
+    "shopDetails": "दुकान विवरण",
+    "invoice": "इनवॉइस कस्टमाइजेशन",
+    "gst": "GST सेटिंग्स",
+    "language": "भाषा",
+    "license": "लाइसेंस",
+    "about": "के बारे में",
+    "appPreferences": "ऐप प्राथमिकताएं"
+  },
+  "fields": {
+    "shopName": "दुकान का नाम",
+    "phoneNumber": "फोन नंबर",
+    "address": "पता",
+    "shopLogo": "दुकान का लोगो",
+    "addLogo": "लोगो जोड़ें",
+    "template": "टेम्पलेट",
+    "colorTheme": "रंग थीम",
+    "footerNote": "फुटर नोट",
+    "defaultGst": "डिफ़ॉल्ट GST",
+    "defaultRate": "डिफ़ॉल्ट दर",
+    "deviceId": "डिवाइस ID",
+    "enterLicenseKey": "लाइसेंस कुंजी दर्ज करें",
+    "getLicense": "लाइसेंस प्राप्त करें"
+  },
+  "templates": {
+    "classic": "क्लासिक",
+    "classicDesc": "पारंपरिक पेशेवर लुक",
+    "modern": "मॉडर्न",
+    "modernDesc": "गोल कोनों के साथ साफ",
+    "compact": "कॉम्पैक्ट",
+    "compactDesc": "छोटे फॉन्ट, अधिक आइटम"
+  },
+  "colors": {
+    "blue": "नीला",
+    "green": "हरा",
+    "orange": "नारंगी",
+    "purple": "बैंगनी"
+  },
+  "license": {
+    "status": "स्थिति",
+    "licensed": "लाइसेंस्ड",
+    "trial": "ट्रायल ({{days}} दिन बाकी)",
+    "expired": "समाप्त"
+  },
+  "about": {
+    "version": "BillKhata v1.0.0",
+    "madeWith": "भारतीय दुकानदारों के लिए ❤️ से बनाया"
+  },
+  "removeLogo": {
+    "title": "लोगो हटाएं",
+    "confirm": "क्या आप वाकई दुकान का लोगो हटाना चाहते हैं?"
+  },
+  "trash": "ट्रैश",
+  "wizard": {
+    "welcome": {
+      "title": "BillKhata में आपका स्वागत है",
+      "subtitle": "सेकंडों में पेशेवर बिल बनाएं।\nवॉट्सएप के जरिए तुरंत शेयर करें।",
+      "feature1": "सुपर-फास्ट बिलिंग",
+      "feature2": "वॉट्सएप शेयरिंग",
+      "feature3": "ऑफलाइन काम करता है"
+    },
+    "shopInfo": {
+      "title": "आपकी दुकान का विवरण",
+      "subtitle": "यह आपके इनवॉइस पर दिखाई देगा",
+      "shopNamePlaceholder": "जैसे, शर्मा जनरल स्टोर",
+      "phonePlaceholder": "जैसे, 98765 43210",
+      "addressPlaceholder": "जैसे, 123 मेन रोड, शहर",
+      "phoneLabel": "फोन नंबर (वैकल्पिक)",
+      "addressLabel": "पता (वैकल्पिक)"
+    },
+    "logo": {
+      "title": "अपना लोगो जोड़ें",
+      "subtitle": "अपने इनवॉइस को पेशेवर बनाएं",
+      "tapToSelect": "चुनने के लिए टैप करें",
+      "changeLogo": "लोगो बदलें"
+    },
+    "branding": {
+      "title": "अपना इनवॉइस कस्टमाइज करें",
+      "subtitle": "अपनी पसंदीदा शैली चुनें",
+      "template": "टेम्पलेट",
+      "color": "रंग"
+    },
+    "gst": {
+      "title": "GST प्राथमिकताएं",
+      "subtitle": "अपनी डिफ़ॉल्ट GST सेटिंग्स सेट करें",
+      "enableDefault": "डिफ़ॉल्ट रूप से GST सक्षम करें",
+      "enableDefaultHint": "नए बिलों के लिए GST चालू रहेगा"
+    },
+    "done": {
+      "title": "सब तैयार है!",
+      "subtitle": "सेकंडों में बिल बनाना शुरू करें।\nआप कभी भी सेटिंग्स बदल सकते हैं।"
+    }
+  }
+}

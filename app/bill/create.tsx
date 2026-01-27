@@ -19,6 +19,7 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useHeaderHeight } from '@react-navigation/elements';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 import { useTheme, spacing, borderRadius } from '../../src/theme';
 import {
   Text,
@@ -52,6 +53,7 @@ export default function CreateBillScreen() {
   const { duplicateFromId } = useLocalSearchParams<{ duplicateFromId?: string }>();
   const headerHeight = useHeaderHeight();
   const scrollViewRef = useRef<ScrollView>(null);
+  const { t } = useTranslation(['bills', 'common']);
 
   // Get defaults from settings
   const defaultGstEnabled = useSettingsStore((s) => s.defaultGstEnabled);
@@ -177,7 +179,7 @@ export default function CreateBillScreen() {
 
   const handleSaveBill = async () => {
     if (lineItems.length === 0) {
-      Alert.alert('No Items', 'Please add at least one item to the bill.');
+      Alert.alert(t('create.noItems'), t('create.addItemPrompt'));
       return;
     }
 
@@ -245,11 +247,11 @@ export default function CreateBillScreen() {
         {/* Bill Info */}
         <View style={styles.row}>
           <View style={styles.halfWidth}>
-            <Caption>Bill #</Caption>
-            <Text variant="label">Auto</Text>
+            <Caption>{t('common:labels.billNumber')}</Caption>
+            <Text variant="label">{t('common:labels.auto')}</Text>
           </View>
           <View style={styles.halfWidth}>
-            <Caption>Date</Caption>
+            <Caption>{t('common:labels.date')}</Caption>
             <Text variant="label">{formatDate(billDate, 'short')}</Text>
           </View>
         </View>
@@ -263,7 +265,7 @@ export default function CreateBillScreen() {
 
         {/* Line Items */}
         <View style={styles.section}>
-          <Heading3>Items</Heading3>
+          <Heading3>{t('common:labels.items')}</Heading3>
 
           {/* Existing items */}
           {lineItems.map((item) => (
@@ -328,7 +330,7 @@ export default function CreateBillScreen() {
                 />
               </View>
               <Button
-                title="Add"
+                title={t('common:buttons.add')}
                 size="small"
                 variant="primary"
                 onPress={handleAddItem}
@@ -343,13 +345,13 @@ export default function CreateBillScreen() {
           <Card variant="elevated">
             {/* Subtotal */}
             <View style={styles.summaryRow}>
-              <Text color="secondary">Subtotal</Text>
+              <Text color="secondary">{t('common:labels.subtotal')}</Text>
               <Text variant="money">{formatMoney(summary.subtotalPaise)}</Text>
             </View>
 
             {/* Discount */}
             <View style={styles.summaryRow}>
-              <Text color="secondary">Discount</Text>
+              <Text color="secondary">{t('common:labels.discount')}</Text>
               <View style={styles.discountInput}>
                 <NumericInput
                   placeholder="0"
@@ -363,7 +365,7 @@ export default function CreateBillScreen() {
 
             {/* GST Toggle */}
             <View style={styles.summaryRow}>
-              <Text color="secondary">GST</Text>
+              <Text color="secondary">{t('common:labels.gst')}</Text>
               <View style={styles.gstControls}>
                 <Pressable
                   onPress={() => setGstEnabled(!gstEnabled)}
@@ -379,7 +381,7 @@ export default function CreateBillScreen() {
                     variant="caption"
                     style={{ color: gstEnabled ? colors.textInverse : colors.text }}
                   >
-                    {gstEnabled ? 'ON' : 'OFF'}
+                    {gstEnabled ? t('common:labels.on') : t('common:labels.off')}
                   </Text>
                 </Pressable>
 
@@ -429,7 +431,7 @@ export default function CreateBillScreen() {
 
             {/* Total */}
             <View style={[styles.summaryRow, styles.totalRow]}>
-              <Text variant="h3">TOTAL</Text>
+              <Text variant="h3">{t('common:labels.total')}</Text>
               <Text variant="moneyLarge" style={{ color: colors.primary }}>
                 {formatMoney(summary.grandTotalPaise)}
               </Text>
@@ -440,7 +442,7 @@ export default function CreateBillScreen() {
         {/* Payment Mode */}
         <View style={styles.section}>
           <Text variant="label" style={styles.sectionLabel}>
-            Payment Mode
+            {t('common:labels.paymentMode')}
           </Text>
           <View style={styles.paymentModes}>
             <Pressable
@@ -489,7 +491,7 @@ export default function CreateBillScreen() {
         {/* Save Button */}
         <View style={styles.saveSection}>
           <Button
-            title="SAVE BILL"
+            title={t('create.saveBill')}
             size="large"
             fullWidth
             onPress={handleSaveBill}

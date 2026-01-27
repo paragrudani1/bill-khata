@@ -1,0 +1,51 @@
+{
+  "create": {
+    "title": "Create Bill",
+    "saveBill": "SAVE BILL",
+    "saveChanges": "SAVE CHANGES",
+    "addItem": "Add Item",
+    "itemName": "Item name",
+    "quantity": "Qty",
+    "price": "Price",
+    "noItems": "No Items",
+    "addItemPrompt": "Please add at least one item to the bill."
+  },
+  "detail": {
+    "title": "Bill Details",
+    "billNotFound": "Bill not found",
+    "lastModified": "Last modified",
+    "whatsapp": "WhatsApp",
+    "duplicate": "Duplicate",
+    "deleteBill": "Delete Bill",
+    "deleteConfirm": "Are you sure you want to delete this bill? It will be moved to trash for 30 days.",
+    "itemCount": "Items ({{count}})"
+  },
+  "edit": {
+    "title": "Edit Bill"
+  },
+  "list": {
+    "title": "Bills",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "noBills": "No bills yet",
+    "createFirst": "Create your first bill to see it here",
+    "searchPlaceholder": "Search bills..."
+  },
+  "home": {
+    "todaysSales": "Today's Sales",
+    "billsCreatedToday": "Bills Created Today",
+    "createBill": "+ CREATE BILL",
+    "trialRemaining": "Trial: {{days}} day remaining",
+    "trialRemaining_plural": "Trial: {{days}} days remaining"
+  },
+  "trash": {
+    "title": "Trash",
+    "empty": "Trash is empty",
+    "emptyHint": "Deleted bills appear here for 30 days",
+    "billsInTrash": "{{count}} bill in trash",
+    "billsInTrash_plural": "{{count}} bills in trash",
+    "emptyTrash": "Empty Trash",
+    "emptyTrashConfirm": "This will permanently delete all bills in trash. This cannot be undone.",
+    "daysLeft": "{{count}} days left"
+  }
+}

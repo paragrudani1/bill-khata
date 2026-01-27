@@ -1,0 +1,61 @@
+{
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "share": "Share",
+    "edit": "Edit",
+    "add": "Add",
+    "continue": "Continue",
+    "back": "Back",
+    "skip": "Skip",
+    "restore": "Restore",
+    "remove": "Remove",
+    "getStarted": "Get Started",
+    "skipSetup": "Skip setup →",
+    "skipForNow": "Skip for now",
+    "startBilling": "Start Billing"
+  },
+  "labels": {
+    "total": "TOTAL",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "gst": "GST",
+    "cgst": "CGST",
+    "sgst": "SGST",
+    "cash": "Cash",
+    "upi": "UPI",
+    "on": "ON",
+    "off": "OFF",
+    "auto": "Auto",
+    "date": "Date",
+    "billNumber": "Bill #",
+    "customer": "Customer",
+    "walkIn": "Walk-in",
+    "items": "Items",
+    "paymentMode": "Payment Mode",
+    "status": "Status",
+    "licensed": "Licensed",
+    "expired": "Expired",
+    "trial": "Trial",
+    "daysLeft": "{{count}} days left",
+    "daysRemaining": "{{count}} day remaining",
+    "daysRemaining_plural": "{{count}} days remaining",
+    "loading": "Loading...",
+    "free": "FREE",
+    "set": "Set",
+    "notSet": "Not set"
+  },
+  "errors": {
+    "required": "This field is required",
+    "failed": "Operation failed",
+    "loadFailed": "Failed to load data",
+    "saveFailed": "Failed to save. Please try again.",
+    "deleteFailed": "Failed to delete"
+  },
+  "messages": {
+    "dataStoredLocally": "Data stored locally on this device only",
+    "permissionRequired": "Permission Required",
+    "allowPhotosAccess": "Please allow access to your photos to select a logo."
+  }
+}

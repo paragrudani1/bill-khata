@@ -1,0 +1,96 @@
+{
+  "title": "Settings",
+  "sections": {
+    "shopDetails": "Shop Details",
+    "invoice": "Invoice Customization",
+    "gst": "GST Settings",
+    "language": "Language",
+    "license": "License",
+    "about": "About",
+    "appPreferences": "App Preferences"
+  },
+  "fields": {
+    "shopName": "Shop Name",
+    "phoneNumber": "Phone Number",
+    "address": "Address",
+    "shopLogo": "Shop Logo",
+    "addLogo": "Add Logo",
+    "template": "Template",
+    "colorTheme": "Color Theme",
+    "footerNote": "Footer Note",
+    "defaultGst": "Default GST",
+    "defaultRate": "Default Rate",
+    "deviceId": "Device ID",
+    "enterLicenseKey": "Enter License Key",
+    "getLicense": "Get License"
+  },
+  "templates": {
+    "classic": "Classic",
+    "classicDesc": "Traditional professional look",
+    "modern": "Modern",
+    "modernDesc": "Clean with rounded corners",
+    "compact": "Compact",
+    "compactDesc": "Smaller fonts, more items"
+  },
+  "colors": {
+    "blue": "Blue",
+    "green": "Green",
+    "orange": "Orange",
+    "purple": "Purple"
+  },
+  "license": {
+    "status": "Status",
+    "licensed": "Licensed",
+    "trial": "Trial ({{days}} days left)",
+    "expired": "Expired"
+  },
+  "about": {
+    "version": "BillKhata v1.0.0",
+    "madeWith": "Made with ❤️ for Indian shopkeepers"
+  },
+  "removeLogo": {
+    "title": "Remove Logo",
+    "confirm": "Are you sure you want to remove the shop logo?"
+  },
+  "trash": "Trash",
+  "wizard": {
+    "welcome": {
+      "title": "Welcome to BillKhata",
+      "subtitle": "Create professional bills in seconds.\nShare instantly via WhatsApp.",
+      "feature1": "Super-fast billing",
+      "feature2": "WhatsApp sharing",
+      "feature3": "Works offline"
+    },
+    "shopInfo": {
+      "title": "Your Shop Details",
+      "subtitle": "This will appear on your invoices",
+      "shopNamePlaceholder": "e.g., Sharma General Store",
+      "phonePlaceholder": "e.g., 98765 43210",
+      "addressPlaceholder": "e.g., 123 Main Road, City",
+      "phoneLabel": "Phone Number (Optional)",
+      "addressLabel": "Address (Optional)"
+    },
+    "logo": {
+      "title": "Add Your Logo",
+      "subtitle": "Make your invoices look professional",
+      "tapToSelect": "Tap to select",
+      "changeLogo": "Change Logo"
+    },
+    "branding": {
+      "title": "Customize Your Invoice",
+      "subtitle": "Choose your preferred style",
+      "template": "Template",
+      "color": "Color"
+    },
+    "gst": {
+      "title": "GST Preferences",
+      "subtitle": "Set your default GST settings",
+      "enableDefault": "Enable GST by default",
+      "enableDefaultHint": "GST will be ON for new bills"
+    },
+    "done": {
+      "title": "You're All Set!",
+      "subtitle": "Start creating bills in seconds.\nYou can change settings anytime."
+    }
+  }
+}

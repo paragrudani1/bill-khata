@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
+import { useTranslation } from 'react-i18next';
 import { useTheme, spacing, borderRadius } from '../../../src/theme';
 import {
   Text,
@@ -51,6 +52,7 @@ export default function EditBillScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const license = useLicense();
+  const { t } = useTranslation(['bills', 'common']);
 
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
@@ -171,7 +173,7 @@ export default function EditBillScreen() {
     }
 
     if (lineItems.length === 0) {
-      Alert.alert('No Items', 'Please add at least one item to the bill.');
+      Alert.alert(t('create.noItems'), t('create.addItemPrompt'));
       return;
     }
 
@@ -247,11 +249,11 @@ export default function EditBillScreen() {
         {/* Bill Info */}
         <View style={styles.row}>
           <View style={styles.halfWidth}>
-            <Caption>Bill #</Caption>
+            <Caption>{t('common:labels.billNumber')}</Caption>
             <Text variant="label">#{originalBill?.billNumber}</Text>
           </View>
           <View style={styles.halfWidth}>
-            <Caption>Date</Caption>
+            <Caption>{t('common:labels.date')}</Caption>
             <Text variant="label">{formatDate(billDate, 'short')}</Text>
           </View>
         </View>
@@ -265,7 +267,7 @@ export default function EditBillScreen() {
 
         {/* Line Items */}
         <View style={styles.section}>
-          <Heading3>Items</Heading3>
+          <Heading3>{t('common:labels.items')}</Heading3>
 
           {lineItems.map((item) => (
             <Card key={item.id} variant="outlined" style={styles.lineItemCard}>
@@ -327,7 +329,7 @@ export default function EditBillScreen() {
                 />
               </View>
               <Button
-                title="Add"
+                title={t('common:buttons.add')}
                 size="small"
                 variant="primary"
                 onPress={handleAddItem}
@@ -341,12 +343,12 @@ export default function EditBillScreen() {
         <View style={styles.section}>
           <Card variant="elevated">
             <View style={styles.summaryRow}>
-              <Text color="secondary">Subtotal</Text>
+              <Text color="secondary">{t('common:labels.subtotal')}</Text>
               <Text variant="money">{formatMoney(summary.subtotalPaise)}</Text>
             </View>
 
             <View style={styles.summaryRow}>
-              <Text color="secondary">Discount</Text>
+              <Text color="secondary">{t('common:labels.discount')}</Text>
               <View style={styles.discountInput}>
                 <NumericInput
                   placeholder="0"
@@ -359,7 +361,7 @@ export default function EditBillScreen() {
             </View>
 
             <View style={styles.summaryRow}>
-              <Text color="secondary">GST</Text>
+              <Text color="secondary">{t('common:labels.gst')}</Text>
               <View style={styles.gstControls}>
                 <Pressable
                   onPress={() => setGstEnabled(!gstEnabled)}
@@ -375,7 +377,7 @@ export default function EditBillScreen() {
                     variant="caption"
                     style={{ color: gstEnabled ? colors.textInverse : colors.text }}
                   >
-                    {gstEnabled ? 'ON' : 'OFF'}
+                    {gstEnabled ? t('common:labels.on') : t('common:labels.off')}
                   </Text>
                 </Pressable>
 
@@ -420,7 +422,7 @@ export default function EditBillScreen() {
             )}
 
             <View style={[styles.summaryRow, styles.totalRow]}>
-              <Text variant="h3">TOTAL</Text>
+              <Text variant="h3">{t('common:labels.total')}</Text>
               <Text variant="moneyLarge" style={{ color: colors.primary }}>
                 {formatMoney(summary.grandTotalPaise)}
               </Text>
@@ -430,7 +432,7 @@ export default function EditBillScreen() {
 
         {/* Payment Mode */}
         <View style={styles.section}>
-          <Text variant="label" style={styles.sectionLabel}>Payment Mode</Text>
+          <Text variant="label" style={styles.sectionLabel}>{t('common:labels.paymentMode')}</Text>
           <View style={styles.paymentModes}>
             <Pressable
               onPress={() => setPaymentMode('cash')}
@@ -472,7 +474,7 @@ export default function EditBillScreen() {
         {/* Save Button */}
         <View style={styles.saveSection}>
           <Button
-            title="SAVE CHANGES"
+            title={t('create.saveChanges')}
             size="large"
             fullWidth
             onPress={handleSaveBill}

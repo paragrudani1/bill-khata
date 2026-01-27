@@ -1,0 +1,96 @@
+{
+  "title": "સેટિંગ્સ",
+  "sections": {
+    "shopDetails": "દુકાનની વિગતો",
+    "invoice": "ઇન્વોઇસ કસ્ટમાઇઝેશન",
+    "gst": "GST સેટિંગ્સ",
+    "language": "ભાષા",
+    "license": "લાયસન્સ",
+    "about": "વિશે",
+    "appPreferences": "એપ પસંદગીઓ"
+  },
+  "fields": {
+    "shopName": "દુકાનનું નામ",
+    "phoneNumber": "ફોન નંબર",
+    "address": "સરનામું",
+    "shopLogo": "દુકાનનો લોગો",
+    "addLogo": "લોગો ઉમેરો",
+    "template": "ટેમ્પ્લેટ",
+    "colorTheme": "રંગ થીમ",
+    "footerNote": "ફૂટર નોંધ",
+    "defaultGst": "ડિફોલ્ટ GST",
+    "defaultRate": "ડિફોલ્ટ દર",
+    "deviceId": "ડિવાઇસ ID",
+    "enterLicenseKey": "લાયસન્સ કી દાખલ કરો",
+    "getLicense": "લાયસન્સ મેળવો"
+  },
+  "templates": {
+    "classic": "ક્લાસિક",
+    "classicDesc": "પરંપરાગત વ્યાવસાયિક દેખાવ",
+    "modern": "મોર્ડન",
+    "modernDesc": "ગોળાકાર ખૂણા સાથે સ્વચ્છ",
+    "compact": "કોમ્પેક્ટ",
+    "compactDesc": "નાના ફોન્ટ્સ, વધુ વસ્તુઓ"
+  },
+  "colors": {
+    "blue": "વાદળી",
+    "green": "લીલો",
+    "orange": "નારંગી",
+    "purple": "જાંબલી"
+  },
+  "license": {
+    "status": "સ્થિતિ",
+    "licensed": "લાયસન્સ્ડ",
+    "trial": "ટ્રાયલ ({{days}} દિવસ બાકી)",
+    "expired": "સમાપ્ત"
+  },
+  "about": {
+    "version": "BillKhata v1.0.0",
+    "madeWith": "ભારતીય દુકાનદારો માટે ❤️ સાથે બનાવ્યું"
+  },
+  "removeLogo": {
+    "title": "લોગો દૂર કરો",
+    "confirm": "શું તમે ખરેખર દુકાનનો લોગો દૂર કરવા માંગો છો?"
+  },
+  "trash": "ટ્રેશ",
+  "wizard": {
+    "welcome": {
+      "title": "BillKhata માં આપનું સ્વાગત છે",
+      "subtitle": "સેકંડોમાં વ્યાવસાયિક બિલ બનાવો.\nવૉટ્સએપ દ્વારા તરત શેર કરો.",
+      "feature1": "સુપર-ફાસ્ટ બિલિંગ",
+      "feature2": "વૉટ્સએપ શેરિંગ",
+      "feature3": "ઑફલાઇન કામ કરે છે"
+    },
+    "shopInfo": {
+      "title": "તમારી દુકાનની વિગતો",
+      "subtitle": "આ તમારા ઇન્વોઇસ પર દેખાશે",
+      "shopNamePlaceholder": "દા.ત., શર્મા જનરલ સ્ટોર",
+      "phonePlaceholder": "દા.ત., 98765 43210",
+      "addressPlaceholder": "દા.ત., 123 મેઇન રોડ, શહેર",
+      "phoneLabel": "ફોન નંબર (વૈકલ્પિક)",
+      "addressLabel": "સરનામું (વૈકલ્પિક)"
+    },
+    "logo": {
+      "title": "તમારો લોગો ઉમેરો",
+      "subtitle": "તમારા ઇન્વોઇસને વ્યાવસાયિક બનાવો",
+      "tapToSelect": "પસંદ કરવા ટેપ કરો",
+      "changeLogo": "લોગો બદલો"
+    },
+    "branding": {
+      "title": "તમારો ઇન્વોઇસ કસ્ટમાઇઝ કરો",
+      "subtitle": "તમારી પસંદગીની શૈલી પસંદ કરો",
+      "template": "ટેમ્પ્લેટ",
+      "color": "રંગ"
+    },
+    "gst": {
+      "title": "GST પસંદગીઓ",
+      "subtitle": "તમારી ડિફોલ્ટ GST સેટિંગ્સ સેટ કરો",
+      "enableDefault": "ડિફોલ્ટ રૂપે GST સક્ષમ કરો",
+      "enableDefaultHint": "નવા બિલ માટે GST ચાલુ રહેશે"
+    },
+    "done": {
+      "title": "બધું તૈયાર છે!",
+      "subtitle": "સેકંડોમાં બિલ બનાવવાનું શરૂ કરો.\nતમે ગમે ત્યારે સેટિંગ્સ બદલી શકો છો."
+    }
+  }
+}
