@@ -1,4 +1,7 @@
-# BillKhata 🧾
+<div align="center">
+  <img src="assets/icon.png" alt="BillKhata Logo" width="120" height="120" />
+  <h1>BillKhata 🧾</h1>
+</div>
 
 **BillKhata** is an offline-first, lightning-fast billing application designed specifically for Indian retail shop owners (Kirana stores, hardware shops, mobile shops). It prioritizes speed and simplicity, enabling shopkeepers to create professional GST invoices in under 30 seconds with zero friction.
 

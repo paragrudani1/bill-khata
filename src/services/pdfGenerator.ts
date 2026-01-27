@@ -122,72 +122,72 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: ${isCompact ? '11px' : '12px'};
-      line-height: 1.4;
+      font-size: ${isCompact ? '16px' : '18px'};
+      line-height: 1.5;
       color: #333;
-      padding: 12px;
+      padding: 40px 30px;
       background: #fff;
     }
 
     .invoice {
-      max-width: 380px;
+      max-width: 100%;
       margin: 0 auto;
     }
 
     /* Header */
     .header {
       text-align: center;
-      margin-bottom: ${isCompact ? '15px' : '25px'};
-      padding-bottom: ${isCompact ? '10px' : '15px'};
+      margin-bottom: ${isCompact ? '20px' : '30px'};
+      padding-bottom: ${isCompact ? '15px' : '20px'};
       border-bottom: 2px solid ${primaryColor};
     }
 
     .shop-logo {
-      width: 50px;
-      height: 50px;
+      width: 90px;
+      height: 90px;
       object-fit: contain;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .shop-name {
-      font-size: 18px;
+      font-size: 28px;
       font-weight: bold;
       color: ${primaryColor};
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
 
     .shop-details {
-      font-size: ${isCompact ? '10px' : '11px'};
+      font-size: ${isCompact ? '14px' : '15px'};
       color: #666;
     }
 
     /* Invoice Info */
     .invoice-info {
       display: block;
-      margin-bottom: ${isCompact ? '15px' : '20px'};
-      padding: ${isCompact ? '10px' : '15px'};
+      margin-bottom: ${isCompact ? '20px' : '25px'};
+      padding: ${isCompact ? '15px' : '20px'};
       background: ${isModern ? '#f8f9fa' : 'transparent'};
       border-radius: ${isModern ? '8px' : '0'};
     }
 
     .invoice-title {
-      font-size: ${isCompact ? '14px' : '18px'};
+      font-size: ${isCompact ? '20px' : '24px'};
       font-weight: bold;
       color: ${primaryColor};
     }
 
     .invoice-meta {
       text-align: left;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .invoice-meta div {
-      margin-bottom: 3px;
+      margin-bottom: 5px;
     }
 
     .label {
       color: #666;
-      font-size: 10px;
+      font-size: 12px;
     }
 
     .value {
@@ -207,15 +207,15 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     .items-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: ${isCompact ? '15px' : '20px'};
+      margin-bottom: ${isCompact ? '20px' : '25px'};
     }
 
     .items-table th {
       background: ${primaryColor};
       color: white;
-      padding: 6px 4px;
+      padding: ${isCompact ? '10px 12px' : '14px 18px'};
       text-align: left;
-      font-size: ${isCompact ? '10px' : '11px'};
+      font-size: ${isCompact ? '14px' : '15px'};
       text-transform: uppercase;
     }
 
@@ -232,7 +232,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .items-table td {
-      padding: 6px 4px;
+      padding: ${isCompact ? '10px 12px' : '14px 18px'};
       border-bottom: 1px solid #eee;
     }
 
@@ -260,9 +260,9 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     .summary-row.total {
       border-bottom: none;
       border-top: 2px solid ${primaryColor};
-      margin-top: 8px;
-      padding-top: 10px;
-      font-size: ${isCompact ? '14px' : '16px'};
+      margin-top: 10px;
+      padding-top: 12px;
+      font-size: ${isCompact ? '18px' : '20px'};
       font-weight: bold;
     }
 
@@ -279,7 +279,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .gst-row {
-      font-size: ${isCompact ? '10px' : '11px'};
+      font-size: ${isCompact ? '12px' : '13px'};
     }
 
     /* Payment */
@@ -297,23 +297,23 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
 
     /* Footer */
     .footer {
-      margin-top: ${isCompact ? '20px' : '30px'};
-      padding-top: ${isCompact ? '15px' : '20px'};
+      margin-top: ${isCompact ? '25px' : '35px'};
+      padding-top: ${isCompact ? '20px' : '25px'};
       border-top: 1px solid #eee;
       text-align: center;
     }
 
     .footer-note {
-      font-size: ${isCompact ? '10px' : '11px'};
+      font-size: ${isCompact ? '12px' : '13px'};
       color: #666;
       font-style: italic;
     }
 
     .thank-you {
-      font-size: ${isCompact ? '12px' : '14px'};
+      font-size: ${isCompact ? '14px' : '16px'};
       font-weight: 600;
       color: ${primaryColor};
-      margin-top: 10px;
+      margin-top: 12px;
     }
   </style>
 </head>
@@ -487,11 +487,11 @@ export async function generateInvoicePdf(options: PdfGeneratorOptions): Promise<
   // Generate HTML
   const html = generateInvoiceHtml(options, logoBase64);
 
-  // Create PDF with mobile-friendly width
+  // Create PDF with larger width for mobile readability
   const { uri } = await Print.printToFileAsync({
     html,
     base64: false,
-    width: 380,
+    width: 794, // A4 width at 96 DPI
   });
 
   // Ensure cache directory exists

@@ -12,6 +12,8 @@ import { Text, Card, Caption } from '../../src/components/ui';
 import { formatMoney, formatTime, formatBillNumber, getDateGroupKey } from '../../src/utils';
 import { getBills } from '../../src/db';
 import { Invoice } from '../../src/types';
+import { shareBill } from '../../src/services';
+import { useSettingsStore } from '../../src/stores';
 
 interface GroupedBills {
   title: string;
@@ -37,6 +39,15 @@ function groupBillsByDate(bills: Invoice[]): GroupedBills[] {
 export default function BillsScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+
+  // Settings for sharing
+  const shopName = useSettingsStore((s) => s.shopName);
+  const shopPhone = useSettingsStore((s) => s.shopPhone);
+  const shopAddress = useSettingsStore((s) => s.shopAddress);
+  const shopLogoUri = useSettingsStore((s) => s.shopLogoUri);
+  const invoiceTemplate = useSettingsStore((s) => s.invoiceTemplate);
+  const invoiceColorTheme = useSettingsStore((s) => s.invoiceColorTheme);
+  const footerNote = useSettingsStore((s) => s.footerNote);
 
   const [bills, setBills] = useState<Invoice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,9 +83,17 @@ export default function BillsScreen() {
     router.push(`/bill/${billId}`);
   };
 
-  const handleShare = (billId: string) => {
-    // TODO: Implement share functionality
-    console.log('Share bill:', billId);
+  const handleShare = async (billId: string) => {
+    await shareBill({
+      billId,
+      shopName: shopName || 'My Shop',
+      shopPhone,
+      shopAddress,
+      shopLogoUri,
+      template: invoiceTemplate,
+      colorTheme: invoiceColorTheme,
+      footerNote,
+    });
   };
 
   const renderBillItem = (bill: Invoice) => (
