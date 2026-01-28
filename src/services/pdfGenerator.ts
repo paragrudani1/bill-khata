@@ -3,14 +3,19 @@
  * Template-based PDF generation for invoices
  */
 
-import { File, Directory, Paths } from 'expo-file-system';
-import * as Print from 'expo-print';
-import { Invoice, InvoiceItem } from '../types';
-import { formatMoney, formatDate, formatBillNumber, formatIndianNumber } from '../utils';
-import { colors } from '../theme';
+import { File, Directory, Paths } from "expo-file-system";
+import * as Print from "expo-print";
+import { Invoice, InvoiceItem } from "../types";
+import {
+  formatMoney,
+  formatDate,
+  formatBillNumber,
+  formatIndianNumber,
+} from "../utils";
+import { colors } from "../theme";
 
-export type InvoiceTemplate = 'classic' | 'modern' | 'compact';
-export type InvoiceColorTheme = 'blue' | 'green' | 'orange' | 'purple';
+export type InvoiceTemplate = "classic" | "modern" | "compact";
+export type InvoiceColorTheme = "blue" | "green" | "orange" | "purple";
 
 interface PdfGeneratorOptions {
   bill: Invoice;
@@ -25,10 +30,10 @@ interface PdfGeneratorOptions {
 }
 
 const themeColors: Record<InvoiceColorTheme, string> = {
-  blue: '#2563EB',
-  green: '#16A34A',
-  orange: '#EA580C',
-  purple: '#9333EA',
+  blue: "#2563EB",
+  green: "#16A34A",
+  orange: "#EA580C",
+  purple: "#9333EA",
 };
 
 /**
@@ -43,7 +48,7 @@ async function getBase64Logo(uri: string | null): Promise<string | null> {
 
     // Check if the file exists
     if (!file.exists) {
-      console.warn('Logo file does not exist:', uri);
+      console.warn("Logo file does not exist:", uri);
       return null;
     }
 
@@ -51,19 +56,19 @@ async function getBase64Logo(uri: string | null): Promise<string | null> {
     const base64 = await file.base64();
 
     // Determine MIME type from extension
-    const extension = uri.split('.').pop()?.toLowerCase();
-    let mimeType = 'image/png';
-    if (extension === 'jpg' || extension === 'jpeg') {
-      mimeType = 'image/jpeg';
-    } else if (extension === 'gif') {
-      mimeType = 'image/gif';
-    } else if (extension === 'webp') {
-      mimeType = 'image/webp';
+    const extension = uri.split(".").pop()?.toLowerCase();
+    let mimeType = "image/png";
+    if (extension === "jpg" || extension === "jpeg") {
+      mimeType = "image/jpeg";
+    } else if (extension === "gif") {
+      mimeType = "image/gif";
+    } else if (extension === "webp") {
+      mimeType = "image/webp";
     }
 
     return `data:${mimeType};base64,${base64}`;
   } catch (error) {
-    console.error('Error converting logo to base64:', error);
+    console.error("Error converting logo to base64:", error);
     return null;
   }
 }
@@ -71,7 +76,10 @@ async function getBase64Logo(uri: string | null): Promise<string | null> {
 /**
  * Generate HTML for the invoice
  */
-function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | null): string {
+function generateInvoiceHtml(
+  options: PdfGeneratorOptions,
+  logoBase64: string | null,
+): string {
   const {
     bill,
     items,
@@ -84,8 +92,8 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
   } = options;
 
   const primaryColor = themeColors[colorTheme];
-  const isCompact = template === 'compact';
-  const isModern = template === 'modern';
+  const isCompact = template === "compact";
+  const isModern = template === "modern";
 
   // Calculate GST rate display
   const gstRateHalf = bill.gstRate ? bill.gstRate / 2 : 0;
@@ -93,11 +101,13 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
   // Format items for display
   const itemRows = items
     .map((item, index) => {
-      const priceDisplay = item.pricePaise === 0 ? 'FREE' : formatMoney(item.pricePaise);
-      const totalDisplay = item.pricePaise === 0 ? 'FREE' : formatMoney(item.totalPaise);
+      const priceDisplay =
+        item.pricePaise === 0 ? "FREE" : formatMoney(item.pricePaise);
+      const totalDisplay =
+        item.pricePaise === 0 ? "FREE" : formatMoney(item.totalPaise);
 
       return `
-        <tr class="${index % 2 === 0 ? 'even' : 'odd'}">
+        <tr class="${index % 2 === 0 ? "even" : "odd"}">
           <td class="item-name">${escapeHtml(item.itemName)}</td>
           <td class="qty">${item.quantity}</td>
           <td class="rate">${priceDisplay}</td>
@@ -105,7 +115,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
         </tr>
       `;
     })
-    .join('');
+    .join("");
 
   const html = `
 <!DOCTYPE html>
@@ -122,7 +132,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: ${isCompact ? '16px' : '18px'};
+      font-size: ${isCompact ? "16px" : "18px"};
       line-height: 1.5;
       color: #333;
       padding: 40px 30px;
@@ -137,8 +147,8 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     /* Header */
     .header {
       text-align: center;
-      margin-bottom: ${isCompact ? '20px' : '30px'};
-      padding-bottom: ${isCompact ? '15px' : '20px'};
+      margin-bottom: ${isCompact ? "20px" : "30px"};
+      padding-bottom: ${isCompact ? "15px" : "20px"};
       border-bottom: 2px solid ${primaryColor};
     }
 
@@ -157,21 +167,21 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .shop-details {
-      font-size: ${isCompact ? '14px' : '15px'};
+      font-size: ${isCompact ? "14px" : "15px"};
       color: #666;
     }
 
     /* Invoice Info */
     .invoice-info {
       display: block;
-      margin-bottom: ${isCompact ? '20px' : '25px'};
-      padding: ${isCompact ? '15px' : '20px'};
-      background: ${isModern ? '#f8f9fa' : 'transparent'};
-      border-radius: ${isModern ? '8px' : '0'};
+      margin-bottom: ${isCompact ? "20px" : "25px"};
+      padding: ${isCompact ? "15px" : "20px"};
+      background: ${isModern ? "#f8f9fa" : "transparent"};
+      border-radius: ${isModern ? "8px" : "0"};
     }
 
     .invoice-title {
-      font-size: ${isCompact ? '20px' : '24px'};
+      font-size: ${isCompact ? "20px" : "24px"};
       font-weight: bold;
       color: ${primaryColor};
     }
@@ -196,7 +206,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
 
     /* Customer */
     .customer {
-      margin-bottom: ${isCompact ? '10px' : '15px'};
+      margin-bottom: ${isCompact ? "10px" : "15px"};
     }
 
     .customer-name {
@@ -207,15 +217,15 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     .items-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: ${isCompact ? '20px' : '25px'};
+      margin-bottom: ${isCompact ? "20px" : "25px"};
     }
 
     .items-table th {
       background: ${primaryColor};
       color: white;
-      padding: ${isCompact ? '10px 12px' : '14px 18px'};
+      padding: ${isCompact ? "10px 12px" : "14px 18px"};
       text-align: left;
-      font-size: ${isCompact ? '14px' : '15px'};
+      font-size: ${isCompact ? "14px" : "15px"};
       text-transform: uppercase;
     }
 
@@ -232,12 +242,12 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .items-table td {
-      padding: ${isCompact ? '10px 12px' : '14px 18px'};
+      padding: ${isCompact ? "10px 12px" : "14px 18px"};
       border-bottom: 1px solid #eee;
     }
 
     .items-table tr.even {
-      background: ${isModern ? '#f8f9fa' : 'transparent'};
+      background: ${isModern ? "#f8f9fa" : "transparent"};
     }
 
     .item-name {
@@ -253,7 +263,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     .summary-row {
       display: flex;
       justify-content: space-between;
-      padding: ${isCompact ? '4px 0' : '6px 0'};
+      padding: ${isCompact ? "4px 0" : "6px 0"};
       border-bottom: 1px solid #eee;
     }
 
@@ -262,7 +272,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
       border-top: 2px solid ${primaryColor};
       margin-top: 10px;
       padding-top: 12px;
-      font-size: ${isCompact ? '18px' : '20px'};
+      font-size: ${isCompact ? "18px" : "20px"};
       font-weight: bold;
     }
 
@@ -279,13 +289,13 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     }
 
     .gst-row {
-      font-size: ${isCompact ? '12px' : '13px'};
+      font-size: ${isCompact ? "12px" : "13px"};
     }
 
     /* Payment */
     .payment {
-      margin-top: ${isCompact ? '15px' : '20px'};
-      padding: ${isCompact ? '8px 12px' : '10px 15px'};
+      margin-top: ${isCompact ? "15px" : "20px"};
+      padding: ${isCompact ? "8px 12px" : "10px 15px"};
       background: #f8f9fa;
       border-radius: 4px;
       display: inline-block;
@@ -297,20 +307,20 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
 
     /* Footer */
     .footer {
-      margin-top: ${isCompact ? '25px' : '35px'};
-      padding-top: ${isCompact ? '20px' : '25px'};
+      margin-top: ${isCompact ? "25px" : "35px"};
+      padding-top: ${isCompact ? "20px" : "25px"};
       border-top: 1px solid #eee;
       text-align: center;
     }
 
     .footer-note {
-      font-size: ${isCompact ? '12px' : '13px'};
+      font-size: ${isCompact ? "12px" : "13px"};
       color: #666;
       font-style: italic;
     }
 
     .thank-you {
-      font-size: ${isCompact ? '14px' : '16px'};
+      font-size: ${isCompact ? "14px" : "16px"};
       font-weight: 600;
       color: ${primaryColor};
       margin-top: 12px;
@@ -321,11 +331,11 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
   <div class="invoice">
     <!-- Header -->
     <div class="header">
-      ${logoBase64 ? `<img src="${logoBase64}" class="shop-logo" alt="Logo">` : ''}
-      <div class="shop-name">${escapeHtml(shopName || 'My Shop')}</div>
+      ${logoBase64 ? `<img src="${logoBase64}" class="shop-logo" alt="Logo">` : ""}
+      <div class="shop-name">${escapeHtml(shopName || "My Shop")}</div>
       <div class="shop-details">
-        ${shopPhone ? `Phone: ${escapeHtml(shopPhone)}<br>` : ''}
-        ${shopAddress ? escapeHtml(shopAddress) : ''}
+        ${shopPhone ? `Phone: ${escapeHtml(shopPhone)}<br>` : ""}
+        ${shopAddress ? escapeHtml(shopAddress) : ""}
       </div>
     </div>
 
@@ -333,12 +343,16 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     <div class="invoice-info">
       <div>
         <div class="invoice-title">INVOICE</div>
-        ${bill.customerName ? `
+        ${
+          bill.customerName
+            ? `
           <div class="customer">
             <span class="label">Bill To:</span>
             <div class="customer-name">${escapeHtml(bill.customerName)}</div>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
       </div>
       <div class="invoice-meta">
         <div>
@@ -347,7 +361,7 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
         </div>
         <div>
           <span class="label">Date:</span>
-          <span class="value">${formatDate(bill.billDate, 'long')}</span>
+          <span class="value">${formatDate(bill.billDate, "long")}</span>
         </div>
       </div>
     </div>
@@ -374,14 +388,20 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
         <span class="amount">${formatMoney(bill.subtotalPaise)}</span>
       </div>
 
-      ${bill.discountPaise > 0 ? `
+      ${
+        bill.discountPaise > 0
+          ? `
         <div class="summary-row">
           <span class="label">Discount</span>
           <span class="amount">-${formatMoney(bill.discountPaise)}</span>
         </div>
-      ` : ''}
+      `
+          : ""
+      }
 
-      ${bill.gstEnabled && bill.gstRate ? `
+      ${
+        bill.gstEnabled && bill.gstRate
+          ? `
         <div class="summary-row gst-row">
           <span class="label">CGST @${gstRateHalf}%</span>
           <span class="amount">${formatMoney(bill.cgstPaise)}</span>
@@ -390,7 +410,9 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
           <span class="label">SGST @${gstRateHalf}%</span>
           <span class="amount">${formatMoney(bill.sgstPaise)}</span>
         </div>
-      ` : ''}
+      `
+          : ""
+      }
 
       <div class="summary-row total">
         <span>GRAND TOTAL</span>
@@ -401,12 +423,12 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
     <!-- Payment Mode -->
     <div class="payment">
       <span class="label">Payment Mode:</span>
-      <span class="payment-mode">${bill.paymentMode === 'cash' ? '💵 Cash' : '📱 UPI'}</span>
+      <span class="payment-mode">${bill.paymentMode === "cash" ? "💵 Cash" : "📱 UPI"}</span>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-      ${footerNote ? `<div class="footer-note">${escapeHtml(footerNote)}</div>` : ''}
+      ${footerNote ? `<div class="footer-note">${escapeHtml(footerNote)}</div>` : ""}
       <div class="thank-you">Thank you for your business!</div>
     </div>
   </div>
@@ -422,11 +444,11 @@ function generateInvoiceHtml(options: PdfGeneratorOptions, logoBase64: string | 
  */
 function escapeHtml(text: string): string {
   const map: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;',
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
 }
@@ -435,7 +457,7 @@ function escapeHtml(text: string): string {
  * Get the cache directory for PDFs
  */
 function getPdfCacheDir(): Directory {
-  return new Directory(Paths.cache, 'invoices');
+  return new Directory(Paths.cache, "invoices");
 }
 
 /**
@@ -448,7 +470,7 @@ function getCachedPdfFile(billId: string): File {
 /**
  * Check if a cached PDF exists and is valid
  */
-async function getCachedPdf(billId: string): Promise<string | null> {
+function getCachedPdf(billId: string): string | null {
   try {
     const pdfFile = getCachedPdfFile(billId);
 
@@ -460,10 +482,10 @@ async function getCachedPdf(billId: string): Promise<string | null> {
         return pdfFile.uri;
       }
       // Delete old cache
-      await pdfFile.delete();
+      pdfFile.delete();
     }
   } catch (error) {
-    console.error('Error checking cached PDF:', error);
+    console.error("Error checking cached PDF:", error);
   }
   return null;
 }
@@ -471,13 +493,15 @@ async function getCachedPdf(billId: string): Promise<string | null> {
 /**
  * Generate and cache a PDF for a bill
  */
-export async function generateInvoicePdf(options: PdfGeneratorOptions): Promise<string> {
+export async function generateInvoicePdf(
+  options: PdfGeneratorOptions,
+): Promise<string> {
   const { bill } = options;
 
   // Check cache first
-  const cachedPdf = await getCachedPdf(bill.id);
+  const cachedPdf = getCachedPdf(bill.id);
   if (cachedPdf) {
-    console.log('Using cached PDF:', cachedPdf);
+    console.log("Using cached PDF:", cachedPdf);
     return cachedPdf;
   }
 
@@ -491,21 +515,21 @@ export async function generateInvoicePdf(options: PdfGeneratorOptions): Promise<
   const { uri } = await Print.printToFileAsync({
     html,
     base64: false,
-    width: 794, // A4 width at 96 DPI
+    width: 380, // Wider for better readability on mobile
   });
 
   // Ensure cache directory exists
   const cacheDir = getPdfCacheDir();
   if (!cacheDir.exists) {
-    await cacheDir.create();
+    cacheDir.create();
   }
 
   // Move to cache with proper name
   const tempFile = new File(uri);
   const cachedFile = getCachedPdfFile(bill.id);
-  await tempFile.move(cachedFile);
+  tempFile.move(cachedFile);
 
-  console.log('Generated PDF:', cachedFile.uri);
+  console.log("Generated PDF:", cachedFile.uri);
   return cachedFile.uri;
 }
 
@@ -527,13 +551,13 @@ export async function cleanupPdfCache(): Promise<number> {
       if (item instanceof File) {
         const modTime = item.modificationTime;
         if (modTime && modTime < sevenDaysAgo) {
-          await item.delete();
+          item.delete();
           deletedCount++;
         }
       }
     }
   } catch (error) {
-    console.error('Error cleaning PDF cache:', error);
+    console.error("Error cleaning PDF cache:", error);
   }
 
   return deletedCount;
@@ -549,6 +573,6 @@ export async function deleteCachedPdf(billId: string): Promise<void> {
       await pdfFile.delete();
     }
   } catch (error) {
-    console.error('Error deleting cached PDF:', error);
+    console.error("Error deleting cached PDF:", error);
   }
 }
