@@ -4,7 +4,7 @@
  */
 
 import { Tabs } from 'expo-router';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Pressable, Platform } from 'react-native';
 import { useTheme } from '../../src/theme';
 import { Text } from '../../src/components/ui';
 
@@ -44,9 +44,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
-          paddingTop: 8,
-          paddingBottom: 24,
-          height: 76,
+          height: 80,
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -59,6 +57,20 @@ export default function TabLayout() {
         headerTitleStyle: {
           fontWeight: '600',
         },
+        tabBarButton: (props: any) => (
+          <Pressable
+            {...props}
+            android_ripple={{
+              color: colors.primary + '20',
+              borderless: false,
+              foreground: true,
+            }}
+            style={({ pressed }) => [
+              props.style,
+              Platform.OS === 'ios' && { opacity: pressed ? 0.7 : 1 },
+            ]}
+          />
+        ),
       }}
     >
       <Tabs.Screen
