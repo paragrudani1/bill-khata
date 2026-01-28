@@ -6,13 +6,7 @@
 import { File, Directory, Paths } from "expo-file-system";
 import * as Print from "expo-print";
 import { Invoice, InvoiceItem } from "../types";
-import {
-  formatMoney,
-  formatDate,
-  formatBillNumber,
-  formatIndianNumber,
-} from "../utils";
-import { colors } from "../theme";
+import { formatMoney, formatDate, formatBillNumber } from "../utils";
 
 export type InvoiceTemplate = "classic" | "modern" | "compact";
 export type InvoiceColorTheme = "blue" | "green" | "orange" | "purple";
