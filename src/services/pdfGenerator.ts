@@ -509,7 +509,7 @@ export async function generateInvoicePdf(
   const { uri } = await Print.printToFileAsync({
     html,
     base64: false,
-    width: 380, // Wider for better readability on mobile
+    width: 794, // Approx A4 width at 96 DPI
   });
 
   // Ensure cache directory exists
