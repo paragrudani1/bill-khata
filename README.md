@@ -76,17 +76,7 @@ bill-khata/
 │   ├── services/           # PDF Generation, Sharing
 │   ├── theme/              # Design system (Colors, Typography)
 │   └── utils/              # Formatters & helpers
-└── docs/                   # Detailed documentation
 ```
-
-## 📖 Documentation
-
-Detailed documentation is available in the `docs/` directory:
-
-- [Project Spec & Requirements](docs/PROJECT_SPEC.md)
-- [Database Schema](docs/DB_SCHEMA.md)
-- [PDF Generation](docs/PDF_GENERATION.md)
-- [Progress & Roadmap](docs/PROGRESS.md)
 
 ## 🏗 Architecture
 
